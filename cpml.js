@@ -1,4 +1,6 @@
-document.body.style.border = "5px solid red";
+const DEBUG = true;
+
+DEBUG ? (document.body.style.border = "5px solid red") : null;
 
 function start() {
   const CONTAINER_SELECTOR = document.querySelector(
@@ -19,10 +21,11 @@ function start() {
       "afterbegin",
       `
     <button class="btn-ytm" title="Play">
-      <svg viewBox="0 0 192 192" width="14" height="14" aria-hidden="true">
+      <svg class="icon" viewBox="0 0 192 192" width="14" height="14" aria-hidden="true">
       <circle cx="96" cy="96" r="88" fill="red"/>
       <path fill="#fff" d="m79 122 45-26-45-26z"/>
       </svg>
+     <svg class="icon-loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a11 11 0 1 0 11 11A11 11 0 0 0 12 1Zm0 19a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z" opacity=".3"/><path fill="currentColor" d="M10.1 1.2a11 11 0 0 0-9 8.9A1.6 1.6 0 0 0 2.5 12 1.5 1.5 0 0 0 4 10.7a8 8 0 0 1 6.7-6.6A1.4 1.4 0 0 0 12 2.7a1.6 1.6 0 0 0-1.9-1.5Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
     </button>
     `
     );
@@ -31,14 +34,14 @@ function start() {
   /**
    * Observer containers
    */
-  CONTAINER_SELECTOR.style = "outline: 3px solid lime";
+  DEBUG ? (CONTAINER_SELECTOR.style = "outline: 3px solid lime") : null;
 
   // Callback function to execute when mutations are observed
   const callback = (mutationList, observer) => {
     for (const mutation of mutationList) {
       let newRow = mutation.addedNodes[0];
       if (newRow && newRow.tagName == "DIV" && newRow.hasAttribute("aria-rowindex")) {
-        newRow.style.outline = "2px solid orange";
+        DEBUG ? (newRow.style.outline = "2px solid orange") : null;
         processRow(newRow);
       }
     }
@@ -56,6 +59,7 @@ function start() {
   document.addEventListener("click", (event) => {
     const btn = event.target.closest(".btn-ytm");
     if (!btn) return;
+    btn.classList.add("loading");
 
     const track_url = btn.parentNode.querySelector("a").href;
     const track_id = track_url.match(/track\/([A-Za-z0-9]+)/)?.[1];
@@ -64,7 +68,8 @@ function start() {
     const runtime = chrome?.runtime || browser?.runtime;
 
     runtime.sendMessage({ type: "GET_YT_MUSIC", track_id }, (response) => {
-      console.log(response);
+      btn.classList.remove("loading");
+
       if (response?.ytMusicLink) {
         window.open(response.ytMusicLink);
       }
@@ -102,19 +107,3 @@ function waitForElement(selector, root = document.body) {
     });
   });
 }
-
-// function getYoutubeMusicLink(track_id) {
-//   const API_URL = `https://api.song.link/v1-alpha.1/links?url=spotify:track:${track_id}&songIfSingle=true`;
-//   return fetch(API_URL)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(data);
-//       const ytMusicLink = data.linksByPlatform?.youtubeMusic?.url || null;
-//       console.log({ ytMusicLink });
-//       return ytMusicLink;
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching YouTube Music link:", error);
-//       return null;
-//     });
-// }
