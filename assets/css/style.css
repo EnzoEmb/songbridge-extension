@@ -8,4 +8,7 @@
   position: absolute;
   right: 130px;
   z-index: 50;
+  svg {
+    pointer-events: none;
+  }
 }
