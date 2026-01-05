@@ -1,0 +1,11 @@
+.btn-ytm {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 130px;
+  z-index: 50;
+}
