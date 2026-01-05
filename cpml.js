@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;
 
@@ -21,10 +21,7 @@ function start() {
       "afterbegin",
       `
     <button class="btn-ytm" title="Play">
-      <svg class="icon" viewBox="0 0 192 192" width="14" height="14" aria-hidden="true">
-      <circle cx="96" cy="96" r="88" fill="red"/>
-      <path fill="#fff" d="m79 122 45-26-45-26z"/>
-      </svg>
+      <svg class="icon" xml:space="preserve" viewBox="0 0 192 192"><path fill="none" d="M0 0h192v192H0z"/><circle cx="96" cy="96" r="88" fill="red"/><path fill="#FFF" d="M96 50.32c25.19 0 45.68 20.49 45.68 45.68S121.19 141.68 96 141.68 50.32 121.19 50.32 96 70.81 50.32 96 50.32m0-6.4c-28.76 0-52.08 23.32-52.08 52.08 0 28.76 23.32 52.08 52.08 52.08s52.08-23.32 52.08-52.08c0-28.76-23.32-52.08-52.08-52.08z"/><path fill="#FFF" d="m79 122 45-26-45-26z"/></svg>
      <svg class="icon-loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a11 11 0 1 0 11 11A11 11 0 0 0 12 1Zm0 19a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z" opacity=".3"/><path fill="currentColor" d="M10.1 1.2a11 11 0 0 0-9 8.9A1.6 1.6 0 0 0 2.5 12 1.5 1.5 0 0 0 4 10.7a8 8 0 0 1 6.7-6.6A1.4 1.4 0 0 0 12 2.7a1.6 1.6 0 0 0-1.9-1.5Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
     </button>
     `
@@ -59,6 +56,14 @@ function start() {
   document.addEventListener("click", (event) => {
     const btn = event.target.closest(".btn-ytm");
     if (!btn) return;
+
+    if (btn.classList.contains("loading")) return;
+
+    if (btn.hasAttribute("link")) {
+      window.open(btn.getAttribute("link"));
+      return;
+    }
+
     btn.classList.add("loading");
 
     const track_url = btn.parentNode.querySelector("a").href;
@@ -72,6 +77,7 @@ function start() {
 
       if (response?.ytMusicLink) {
         window.open(response.ytMusicLink);
+        btn.setAttribute("link", response.ytMusicLink);
       }
     });
   });
