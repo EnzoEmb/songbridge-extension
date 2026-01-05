@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;
 
@@ -27,6 +27,19 @@ function start() {
     `
     );
   }
+
+  /**
+   * Process existing rows on load
+   */
+  function processExistingRows() {
+    const rows = CONTAINER_SELECTOR.querySelectorAll("div[role='row'][aria-rowindex]");
+
+    rows.forEach((row) => {
+      DEBUG && (row.style.outline = "2px solid blue");
+      processRow(row);
+    });
+  }
+  processExistingRows();
 
   /**
    * Observer containers
