@@ -55,17 +55,25 @@ function start() {
    */
   document.addEventListener("click", (event) => {
     const btn = event.target.closest(".btn-ytm");
+    if (!btn) return;
+
     const track_url = btn.parentNode.querySelector("a").href;
-    const track_id = track_url.match(/track\/([A-Za-z0-9]+)/)?.[1] ?? null;
-    if (btn) {
-      console.log(track_url);
-      console.log(track_id);
-    }
+    const track_id = track_url.match(/track\/([A-Za-z0-9]+)/)?.[1];
+    if (!track_id) return;
+
+    const runtime = chrome?.runtime || browser?.runtime;
+
+    runtime.sendMessage({ type: "GET_YT_MUSIC", track_id }, (response) => {
+      console.log(response);
+      if (response?.ytMusicLink) {
+        window.open(response.ytMusicLink);
+      }
+    });
   });
 }
 
 /**
- * Wait for container to be available
+ * Helpers
  */
 waitForElement('.contentSpacing [data-testid="top-sentinel"]').then((container) => {
   console.log("Container ready:", container);
@@ -94,3 +102,19 @@ function waitForElement(selector, root = document.body) {
     });
   });
 }
+
+// function getYoutubeMusicLink(track_id) {
+//   const API_URL = `https://api.song.link/v1-alpha.1/links?url=spotify:track:${track_id}&songIfSingle=true`;
+//   return fetch(API_URL)
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);
+//       const ytMusicLink = data.linksByPlatform?.youtubeMusic?.url || null;
+//       console.log({ ytMusicLink });
+//       return ytMusicLink;
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching YouTube Music link:", error);
+//       return null;
+//     });
+// }

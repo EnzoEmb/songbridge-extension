@@ -12,5 +12,9 @@
       "js": ["cpml.js"],
       "css": ["assets/css/style.css"]
     }
-  ]
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": ["https://api.song.link/*"]
 }
