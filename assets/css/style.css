@@ -32,3 +32,37 @@
     }
   }
 }
+.btn-spo {
+  width: 29px;
+  height: 29px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 51px;
+  z-index: 50;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  transition: 0.2s background;
+  svg {
+    pointer-events: none;
+    width: 18px;
+    height: 18px;
+  }
+  .icon-loading {
+    display: none;
+  }
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  &.loading {
+    .icon {
+      display: none;
+    }
+    .icon-loading {
+      display: block;
+    }
+  }
+}
