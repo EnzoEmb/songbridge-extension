@@ -1,4 +1,4 @@
-  <img alt="songbridger" src="https://raw.githubusercontent.com/EnzoEmb/songbridger-extension/master/assets/img/og.png">
+  <img alt="songbridger" src="https://github.com/EnzoEmb/songbridger-extension/blob/14aee8f8f6bde9fe08ce715d0ff26d813af53474/assets/img/repo-og.png">
   
   This is a simple extension that adds a button to each song in Spotify and YouTube Music web-apps, allowing to quickly access the same song on each other platform.
 
