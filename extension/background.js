@@ -63,13 +63,20 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
+/**
+ * Now playing broadcaster
+ */
 function broadcast() {
-  browserAPI.runtime
+  browser.runtime
     .sendMessage({
       type: "NOW_PLAYING_UPDATE",
       payload: nowPlaying,
     })
-    .catch(() => {
-      // Popup not open → ignore
-    });
+    .catch(() => {});
 }
+
+browser.runtime.onMessage.addListener((msg) => {
+  if (msg.type === "GET_NOW_PLAYING") {
+    return Promise.resolve(nowPlaying);
+  }
+});
