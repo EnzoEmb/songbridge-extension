@@ -5,7 +5,7 @@ This extension adds utilities to music streaming web apps, currently Spotify and
 ## Features
 
 - Adds a button to Spotify and YouTube Music web apps to get cross-platform music links.
-- Observes the currently playing song and provides a quick access button to get cross-platform links.
+- Observes the currently playing song and provides a quick access to links.
 
 ## API
 
