@@ -134,3 +134,56 @@ function attachSpotifyButtonHandler() {
     });
   });
 }
+
+/**
+ *
+ *
+ *
+ */
+function observerSpotifyNowPlaying() {
+  function getSpotifyMetadata() {
+    const title = document.querySelector('[data-testid="context-item-link"]')?.innerText;
+
+    const artist = document.querySelector('[data-testid="context-item-info-artist"]')?.innerText;
+
+    // const isPlaying = document.querySelector('[data-testid="control-button-pause"]') !== null;
+
+    const cover = document.querySelector('[data-testid="cover-art-image"]')?.src;
+
+    if (!title || !artist) return null;
+
+    return {
+      service: "spotify",
+      title,
+      artist,
+      cover,
+      // isPlaying,
+    };
+  }
+
+  function sendUpdate() {
+    const data = getSpotifyMetadata();
+    console.log({ data });
+    if (!data) return;
+
+    browser.runtime.sendMessage({
+      type: "NOW_PLAYING",
+      payload: data,
+    });
+  }
+
+  // Initial send
+  sendUpdate();
+
+  // Observe DOM changes (song changes)
+  const observer = new MutationObserver(() => {
+    console.log("updated now playing widget");
+    sendUpdate();
+  });
+
+  observer.observe(document.querySelector('[data-testid="now-playing-widget"]'), {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
+}

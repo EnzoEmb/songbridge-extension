@@ -1,6 +1,19 @@
 const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 
+let nowPlaying = null;
+
 browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === "NOW_PLAYING") {
+    nowPlaying = {
+      ...msg.payload,
+      tabId: sender.tab.id,
+      url: sender.tab.url,
+      timestamp: Date.now(),
+    };
+    console.log("Now playing:", nowPlaying);
+    broadcast();
+  }
+
   if (msg.type === "GET_YT_MUSIC") {
     const apiUrl = `https://api.song.link/v1-alpha.1/links?url=spotify:track:${msg.track_id}&songIfSingle=true`;
 
@@ -49,3 +62,14 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 });
+
+function broadcast() {
+  browserAPI.runtime
+    .sendMessage({
+      type: "NOW_PLAYING_UPDATE",
+      payload: nowPlaying,
+    })
+    .catch(() => {
+      // Popup not open → ignore
+    });
+}

@@ -3,6 +3,10 @@
   "name": "SongBridger — Link Spotify & YouTube Music",
   "version": "1.0",
   "description": "Adds a link to jump between music platforms",
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+
   "icons": {
     "16": "assets/icons/icon-16.png",
     "32": "assets/icons/icon-32.png",
@@ -20,5 +24,5 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "permissions": ["https://api.song.link/*"]
+  "permissions": ["https://api.song.link/*", "tabs", "activeTab"]
 }
