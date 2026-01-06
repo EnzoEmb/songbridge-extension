@@ -1,10 +1,14 @@
 {
   "manifest_version": 2,
-  "name": "Cross Music Platform Links",
+  "name": "SongBridger — Link Spotify & YouTube Music",
   "version": "1.0",
-  "description": "Adds a link to other web music platforms",
+  "description": "Adds a link to jump between music platforms",
   "icons": {
-    "48": "icons/border-48.png"
+    "16": "assets/icons/icon-16.png",
+    "32": "assets/icons/icon-32.png",
+    "48": "assets/icons/icon-48.png",
+    "128": "assets/icons/icon-128.png",
+    "256": "assets/icons/icon-256.png"
   },
   "content_scripts": [
     {
