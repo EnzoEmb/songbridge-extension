@@ -14,9 +14,11 @@ function render(data) {
         <img src="${data.cover || ""}" alt="">
       </div>
       <div class="right">
-        <div class="top">Currently playing:</div>
+        <div class="top">Currently ${data.isPlaying ? "playing" : "paused"}:</div>
         <div class="title">${data.title} - ${data.artist}</div>
-        <div class="platform">on ${data.service}</div>
+        <div class="platform">on
+          <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
+        </div>
       </div>
     </div>
   `;

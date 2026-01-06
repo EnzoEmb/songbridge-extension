@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "SongBridger — Link Spotify & YouTube Music",
-  "version": "1.0",
+  "version": "0.2",
   "description": "Adds a link to jump between music platforms",
   "browser_action": {
     "default_popup": "popup.html"

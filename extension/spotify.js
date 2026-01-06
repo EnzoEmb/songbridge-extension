@@ -146,7 +146,11 @@ function observerSpotifyNowPlaying() {
 
     const artist = document.querySelector('[data-testid="context-item-info-artist"]')?.innerText;
 
-    // const isPlaying = document.querySelector('[data-testid="control-button-pause"]') !== null;
+    const isPlaying = document.querySelector(
+      '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
+    )
+      ? true
+      : false;
 
     const cover = document.querySelector('[data-testid="cover-art-image"]')?.src;
 
@@ -157,7 +161,7 @@ function observerSpotifyNowPlaying() {
       title,
       artist,
       cover,
-      // isPlaying,
+      isPlaying,
     };
   }
 
