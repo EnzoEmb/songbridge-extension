@@ -9,7 +9,7 @@
   "content_scripts": [
     {
       "matches": ["*://music.youtube.com/*", "*://open.spotify.com/*"],
-      "js": ["cpml.js"],
+      "js": ["spotify.js", "youtube.js", "cpml.js"],
       "css": ["assets/css/style.css"]
     }
   ],
