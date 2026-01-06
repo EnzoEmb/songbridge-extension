@@ -16,7 +16,7 @@ function render(data) {
       <div class="right">
         <div class="top">Currently ${data.isPlaying ? "playing" : "paused"}:</div>
         <div class="title">${data.title} - ${data.artist}</div>
-        <div class="platform">on
+        <div class="platform ${data.service}">on
           <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
         </div>
       </div>

@@ -55,14 +55,20 @@ main {
     span {
       text-transform: uppercase;
       font-size: 12px;
-      background: #1ed76030;
-      color: #0d993f;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 3px;
       padding: 2px 5px;
+    }
+    &.spotify span {
+      background: #1ed76030;
+      color: #0d993f;
+    }
+    &.youtube-music span {
+      background: #f7322d26;
+      color: #f7322d;
     }
     img {
       width: 12px;

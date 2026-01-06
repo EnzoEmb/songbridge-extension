@@ -19,6 +19,7 @@ if (location.hostname.includes("spotify.com")) {
 if (location.hostname.includes("youtube.com")) {
   startYoutube();
   attachYoutubeButtonHandler();
+  observerYoutubeNowPlaying();
 }
 
 /**
