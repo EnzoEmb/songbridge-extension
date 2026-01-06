@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;
 
