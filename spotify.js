@@ -1,4 +1,4 @@
-let currentObserver = null;
+let spCurrentObserver = null;
 let lastUrl = location.href;
 
 /**
@@ -15,9 +15,9 @@ function startSpotify() {
   if (!CONTAINER_SELECTOR) return;
 
   // Disconnect previous observer when re-running
-  if (currentObserver) {
-    currentObserver.disconnect();
-    currentObserver = null;
+  if (spCurrentObserver) {
+    spCurrentObserver.disconnect();
+    spCurrentObserver = null;
   }
 
   /**
@@ -69,9 +69,9 @@ function startSpotify() {
     }
   };
 
-  currentObserver = new MutationObserver(callback);
+  spCurrentObserver = new MutationObserver(callback);
 
-  currentObserver.observe(CONTAINER_SELECTOR, {
+  spCurrentObserver.observe(CONTAINER_SELECTOR, {
     attributes: false,
     childList: true,
     subtree: true,
