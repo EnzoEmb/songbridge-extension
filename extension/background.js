@@ -14,6 +14,27 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     broadcast();
   }
 
+  if (msg.type === "GET_SONGLINK") {
+    const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${msg.url}&songIfSingle=true`;
+
+    fetch(apiUrl)
+      .then((r) => r.json())
+      .then((data) => {
+        sendResponse({
+          ok: true,
+          data: data || null,
+        });
+      })
+      .catch((err) => {
+        sendResponse({
+          ok: false,
+          error: err.toString(),
+        });
+      });
+
+    return true;
+  }
+
   if (msg.type === "GET_YT_MUSIC") {
     const apiUrl = `https://api.song.link/v1-alpha.1/links?url=spotify:track:${msg.track_id}&songIfSingle=true`;
 

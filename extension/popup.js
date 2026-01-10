@@ -7,6 +7,7 @@ function render(data) {
     currentlyPlayingDiv.innerHTML = "Nothing is playing";
     return;
   }
+  const url = data.url;
 
   currentlyPlayingDiv.innerHTML = `
     <div>
@@ -61,9 +62,15 @@ function render(data) {
   const links = currentlyPlayingDiv.querySelectorAll(".links a");
   links.forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      e.stopPropagation();
       e.preventDefault();
       btn.classList.add("loading");
+
+      console.log({ url });
+
+      browser.runtime.sendMessage({ type: "GET_SONGLINK", url }).then((response) => {
+        btn.classList.remove("loading");
+        console.log(response);
+      });
     });
   });
 }
