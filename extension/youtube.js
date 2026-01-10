@@ -88,11 +88,15 @@ function observerYoutubeNowPlaying() {
 
     const artist = document.querySelector(".subtitle .byline > a:first-child")?.innerText;
 
-    const isPlaying = document.querySelector(
-      '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
-    )
-      ? true
-      : false;
+    const song_url = [...document.querySelectorAll("ytmusic-responsive-list-item-renderer a")].find(
+      (a) => a.textContent.trim() === title
+    ).href;
+
+    // const isPlaying = document.querySelector(
+    //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
+    // )
+    //   ? true
+    //   : false;
 
     const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
 
@@ -103,13 +107,15 @@ function observerYoutubeNowPlaying() {
       title,
       artist,
       cover,
+      song_url,
       // isPlaying,
     };
   }
 
   function sendUpdate() {
+    console.log("updated now playing widget YOUTUBE");
     const data = getYoutubeMetadata();
-    console.log({ data });
+    console.log("sendUpdate", { data });
     if (!data) return;
 
     browser.runtime.sendMessage({
@@ -123,7 +129,6 @@ function observerYoutubeNowPlaying() {
 
   // Observe DOM changes (song changes)
   const observer = new MutationObserver(() => {
-    console.log("updated now playing widget YOUTUBE");
     sendUpdate();
   });
 

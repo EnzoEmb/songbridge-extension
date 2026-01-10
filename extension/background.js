@@ -15,7 +15,7 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.type === "GET_SONGLINK") {
-    const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${msg.url}&songIfSingle=true`;
+    const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${msg.url}`;
 
     fetch(apiUrl)
       .then((r) => r.json())

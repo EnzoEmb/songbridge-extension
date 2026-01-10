@@ -7,7 +7,9 @@ function render(data) {
     currentlyPlayingDiv.innerHTML = "Nothing is playing";
     return;
   }
-  const url = data.url;
+  const url = data.song_url;
+
+  console.log("renderdata", data);
 
   currentlyPlayingDiv.innerHTML = `
     <div>
@@ -65,7 +67,7 @@ function render(data) {
       e.preventDefault();
       btn.classList.add("loading");
 
-      console.log({ url });
+      console.log("requesting link,", url);
 
       browser.runtime.sendMessage({ type: "GET_SONGLINK", url }).then((response) => {
         btn.classList.remove("loading");
