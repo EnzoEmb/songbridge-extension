@@ -14,4 +14,4 @@ It uses the Songlink/Odesli API to fetch cross-platform music links. It allows a
 ## Changelog
 
 [0.2] - Added currently playing popup
-[0.1] - Initial release
+[0.1] - Initial demo
