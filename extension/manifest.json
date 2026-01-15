@@ -17,12 +17,12 @@
   "content_scripts": [
     {
       "matches": ["*://music.youtube.com/*", "*://open.spotify.com/*"],
-      "js": ["spotify.js", "youtube-music.js", "cpml.js"],
+      "js": ["browser-polyfill.min.js", "spotify.js", "youtube-music.js", "cpml.js"],
       "css": ["assets/css/style.css"]
     }
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["browser-polyfill.min.js", "background.js"]
   },
   "permissions": ["https://api.song.link/*", "tabs", "activeTab"]
 }

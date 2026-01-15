@@ -1,4 +1,4 @@
-const browserAPI = typeof browser !== "undefined" ? browser : chrome;
+const browserAPI = browser;
 const currentlyPlayingDiv = document.querySelector(".currently-playing");
 console.log("Popup opened");
 

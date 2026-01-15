@@ -1,4 +1,4 @@
-const browserAPI = typeof browser !== "undefined" ? browser : chrome;
+const browserAPI = browser;
 let nowPlaying = null;
 const songLinkCache = new Map();
 
