@@ -9,7 +9,7 @@ function render(data) {
   }
   const url = data.song_url;
 
-  console.log("Popup Data", data);
+  // console.log("Popup Data", data);
 
   currentlyPlayingDiv.innerHTML = `
     <div>

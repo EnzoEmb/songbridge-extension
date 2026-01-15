@@ -1,4 +1,5 @@
 const DEBUG = false;
+console.log("CPML EXTENSION INITED");
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;
 

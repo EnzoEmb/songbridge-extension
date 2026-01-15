@@ -3,7 +3,7 @@ const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 let nowPlaying = null;
 
 browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === "NOW_PLAYING") {
+  if (msg.type === "NOW_PLAYING" && nowPlaying?.song_url !== msg.payload.song_url) {
     nowPlaying = {
       ...msg.payload,
       tabId: sender.tab.id,
