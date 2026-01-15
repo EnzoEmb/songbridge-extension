@@ -1,20 +1,13 @@
 let spCurrentObserver = null;
 let lastUrl = location.href;
 
-function startSpotify() {
-  console.log("Starting Spotify enhancements");
-  addSpotifyLinks();
-  listenSpotifyLinks();
-  observeSpotifyRouteChanges();
-  observeSpotifyNowPlaying();
-}
-
 /**
  * =========================
- * MUSIC LINKS
+ * SPOTIFY LOGIC
  * =========================
  */
-function addSpotifyLinks() {
+function startSpotify() {
+  console.log("Starting Spotify enhancements");
   const CONTAINER_SELECTOR = document.querySelector(
     '.contentSpacing [data-testid="top-sentinel"] ~ div[role="presentation"]'
   );
@@ -85,17 +78,43 @@ function addSpotifyLinks() {
   });
 }
 
-function listenSpotifyLinks() {
+/**
+ * =========================
+ * SPOTIFY ROUTE CHANGES
+ * =========================
+ */
+function observeSpotifyRouteChanges() {
+  new MutationObserver(() => {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      DEBUG && console.log("Spotify page changed:", lastUrl);
+
+      waitForElement('.contentSpacing [data-testid="top-sentinel"]').then(() => {
+        startSpotify();
+      });
+    }
+  }).observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+/**
+ * =========================
+ * SPOTIFY BUTTON HANDLER
+ * =========================
+ */
+function attachSpotifyButtonHandler() {
   document.addEventListener("click", (event) => {
     const btn = event.target.closest(".btn-ytm");
     if (!btn) return;
+
+    if (btn.classList.contains("loading")) return;
 
     if (btn.hasAttribute("link")) {
       window.open(btn.getAttribute("link"));
       return;
     }
-
-    if (btn.classList.contains("loading")) return;
 
     btn.classList.add("loading");
 
@@ -117,78 +136,62 @@ function listenSpotifyLinks() {
 }
 
 /**
- * =========================
- * NOW PLAYING
- * =========================
+ *
+ *
+ *
  */
-function observeSpotifyRouteChanges() {
-  new MutationObserver(() => {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      DEBUG && console.log("Spotify page changed:", lastUrl);
+function observerSpotifyNowPlaying() {
+  function getSpotifyMetadata() {
+    const title = document.querySelector('[data-testid="context-item-link"]')?.innerText;
 
-      waitForElement('.contentSpacing [data-testid="top-sentinel"]').then(() => {
-        startSpotify();
-      });
-    }
-  }).observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-}
+    const artist = document.querySelector('[data-testid="context-item-info-artist"]')?.innerText;
 
-function observeSpotifyNowPlaying() {
+    const song_id = document.querySelector('[data-testid="context-link"]').href.split("%3A").pop();
+    const song_url = `https://open.spotify.com/track/${song_id}`;
+
+    // const isPlaying = document.querySelector(
+    //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
+    // )
+    //   ? true
+    //   : false;
+
+    const cover = document.querySelector('[data-testid="cover-art-image"]')?.src;
+
+    if (!title || !artist) return null;
+
+    return {
+      service: "spotify",
+      title,
+      artist,
+      cover,
+      song_url,
+      // isPlaying,
+    };
+  }
+
+  function sendUpdate() {
+    const data = getSpotifyMetadata();
+    console.log({ data });
+    if (!data) return;
+
+    browser.runtime.sendMessage({
+      type: "NOW_PLAYING",
+      payload: data,
+    });
+  }
+
   // Initial send
-  sendSpotifyUpdate();
+  sendUpdate();
 
   // Observe DOM changes (song changes)
   const observer = new MutationObserver(() => {
     console.log("updated now playing widget");
-    sendSpotifyUpdate();
+    sendUpdate();
   });
 
   observer.observe(document.querySelector('[data-testid="now-playing-widget"]'), {
     childList: true,
     subtree: true,
     characterData: true,
-  });
-}
-
-function getSpotifyMetadata() {
-  const title = document.querySelector('[data-testid="context-item-link"]')?.innerText;
-
-  const artist = document.querySelector('[data-testid="context-item-info-artist"]')?.innerText;
-
-  const song_id = document.querySelector('[data-testid="context-link"]')?.href.split("%3A").pop();
-  const song_url = `https://open.spotify.com/track/${song_id}`;
-
-  // const isPlaying = document.querySelector(
-  //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
-  // )
-  //   ? true
-  //   : false;
-
-  const cover = document.querySelector('[data-testid="cover-art-image"]')?.src;
-
-  if (!title || !artist) return null;
-
-  return {
-    service: "spotify",
-    title,
-    artist,
-    cover,
-    song_url,
-    // isPlaying,
-  };
-}
-
-function sendSpotifyUpdate() {
-  const data = getSpotifyMetadata();
-  console.log(data);
-  if (!data) return;
-
-  browser.runtime.sendMessage({
-    type: "NOW_PLAYING",
-    payload: data,
   });
 }
