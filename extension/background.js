@@ -117,7 +117,7 @@ function broadcast() {
 }
 
 browserAPI.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  console.log("tab REMOVED");
+  // console.log("tab REMOVED");
   if (nowPlaying && tabId === nowPlaying.tabId) {
     nowPlaying = null;
     broadcast();
@@ -127,7 +127,7 @@ browserAPI.tabs.onRemoved.addListener((tabId, removeInfo) => {
 browserAPI.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // Reload detected
   if (changeInfo.status === "loading" && tab.url) {
-    console.log("Tab reloading:", tabId, tab.url);
+    // console.log("Tab reloading:", tabId, tab.url);
 
     // Example: clear nowPlaying if its tab reloads
     if (nowPlaying && tabId === nowPlaying.tabId) {
