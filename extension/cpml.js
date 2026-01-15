@@ -11,9 +11,6 @@ DEBUG ? (document.body.style.border = "5px solid red") : null;
 if (location.hostname.includes("spotify.com")) {
   waitForElement('.contentSpacing [data-testid="top-sentinel"]').then(() => {
     startSpotify();
-    //     observeSpotifyRouteChanges();
-    //     attachSpotifyButtonHandler();
-    //     observerSpotifyNowPlaying();
   });
 }
 

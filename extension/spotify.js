@@ -6,7 +6,9 @@ function startSpotify() {
   addSpotifyLinks();
   listenSpotifyLinks();
   observeSpotifyRouteChanges();
+  // waitForElement(document.querySelector('[data-testid="now-playing-widget"]')).then(() => {
   observeSpotifyNowPlaying();
+  // });
 }
 
 /**
@@ -138,20 +140,26 @@ function observeSpotifyRouteChanges() {
 }
 
 function observeSpotifyNowPlaying() {
-  // Initial send
-  sendSpotifyUpdate();
+  waitForElement('[data-testid="now-playing-widget"]')
+    .then((el) => {
+      // Initial send
+      sendSpotifyUpdate();
 
-  // Observe DOM changes (song changes)
-  const observer = new MutationObserver(() => {
-    console.log("updated now playing widget");
-    sendSpotifyUpdate();
-  });
+      // Observe DOM changes (song changes)
+      const observer = new MutationObserver(() => {
+        console.log("updated now playing widget");
+        sendSpotifyUpdate();
+      });
 
-  observer.observe(document.querySelector('[data-testid="now-playing-widget"]'), {
-    childList: true,
-    subtree: true,
-    characterData: true,
-  });
+      observer.observe(document.querySelector('[data-testid="now-playing-widget"]'), {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    })
+    .catch(() => {
+      // element never appeared → ignore
+    });
 }
 
 function getSpotifyMetadata() {
