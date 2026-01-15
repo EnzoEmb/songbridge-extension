@@ -14,6 +14,10 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     broadcast();
   }
 
+  if (msg.type === "GET_NOW_PLAYING") {
+    sendResponse(nowPlaying);
+  }
+
   if (msg.type === "GET_SONGLINK") {
     const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${msg.url}`;
 
@@ -96,8 +100,9 @@ function broadcast() {
     .catch(() => {});
 }
 
-browser.runtime.onMessage.addListener((msg) => {
-  if (msg.type === "GET_NOW_PLAYING") {
-    return Promise.resolve(nowPlaying);
+browserAPI.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  if (nowPlaying && tabId === nowPlaying.tabId) {
+    nowPlaying = null;
+    broadcast();
   }
 });

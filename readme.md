@@ -1,6 +1,6 @@
 <img alt="songbridger" src="https://github.com/EnzoEmb/songbridger-extension/blob/14aee8f8f6bde9fe08ce715d0ff26d813af53474/assets/img/repo-og.png">
 
-This extension adds utilities to music streaming web apps, currently Spotify and Youtube Music.
+This Firefox/Chrome extension adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 
 ## Features
 
