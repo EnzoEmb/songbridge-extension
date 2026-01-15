@@ -18,13 +18,13 @@ function render(data) {
           <img src="${data.cover || ""}" alt="">
         </div>
         <div class="right">
-          <div class="top">Currently playing:</div>
+          <div class="top">Playing on <div class="platform ${data.service}">
+            <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
+          </div></div>
           <div class="title" title="${data.title} - ${data.artist}">${data.title} - ${
     data.artist
   }</div>
-          <div class="platform ${data.service}">on
-            <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
-          </div>
+      
         </div>
       </div>
 

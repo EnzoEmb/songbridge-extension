@@ -43,10 +43,6 @@ main {
       height: 100%;
     }
   }
-  .top {
-    font-size: 15px;
-    text-transform: uppercase;
-  }
   .title {
     font-size: 21px;
     white-space: nowrap;
@@ -55,11 +51,15 @@ main {
     display: block;
     width: 260px;
   }
-  .platform {
-    font-size: 13px;
+  .top {
+    font-size: 15px;
     display: flex;
     gap: 5px;
     align-items: center;
+    text-transform: uppercase;
+  }
+  .platform {
+    font-size: 13px;
     span {
       text-transform: uppercase;
       font-size: 12px;
