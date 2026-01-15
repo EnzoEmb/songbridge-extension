@@ -85,12 +85,10 @@ function attachYoutubeButtonHandler() {
 function observerYoutubeNowPlaying() {
   function getYoutubeMetadata() {
     const title = document.querySelector(".title.ytmusic-player-bar")?.innerText;
-
     const artist = document.querySelector(".subtitle .byline > a:first-child")?.innerText;
-
     const song_url = [...document.querySelectorAll("ytmusic-responsive-list-item-renderer a")].find(
       (a) => a.textContent.trim() === title
-    ).href;
+    )?.href;
 
     // const isPlaying = document.querySelector(
     //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
@@ -100,7 +98,7 @@ function observerYoutubeNowPlaying() {
 
     const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
 
-    if (!title || !artist) return null;
+    if (!title || !artist || !song_url) return null;
 
     return {
       service: "youtube-music",
