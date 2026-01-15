@@ -1,17 +1,18 @@
-<img alt="songbridger" src="https://github.com/EnzoEmb/songbridger-extension/blob/14aee8f8f6bde9fe08ce715d0ff26d813af53474/assets/img/repo-og.png">
+<img alt="songbridge" src="https://github.com/EnzoEmb/songbridge-extension/blob/14aee8f8f6bde9fe08ce715d0ff26d813af53474/assets/img/repo-og.png">
 
 This Firefox/Chrome extension adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 
 ## Features
 
-- Adds a button to Spotify and YouTube Music web apps to get cross-platform music links.
-- Observes the currently playing song and provides a quick access to links.
+- Adds a button to each song on Spotify and YouTube Music to each other platform
+- Observes the currently playing song and provides a quick access to links in the popup.
 
 ## API
 
-It uses the Songlink/Odesli API to fetch cross-platform music links. It allows and usage of 10 requests per minute, which should be sufficient for most users.
+It uses the Songlink/Odesli API to fetch cross-platform music links. <br>
+It allows and usage of 10 requests per minute, which should be sufficient for most users.
 
 ## Changelog
 
-[0.2] - Added currently playing popup
+[0.2] - Added currently playing popup <br>
 [0.1] - Initial demo
