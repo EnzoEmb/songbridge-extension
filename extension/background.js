@@ -1,6 +1,7 @@
 const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 
 let nowPlaying = null;
+const songLinkCache = new Map();
 
 browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "NOW_PLAYING" && nowPlaying?.song_url !== msg.payload.song_url) {
@@ -20,13 +21,28 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   if (msg.type === "GET_SONGLINK") {
     const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${msg.url}`;
+    // 1️⃣ Return cached result if available
+    if (songLinkCache.has(msg.url)) {
+      sendResponse({
+        ok: true,
+        data: songLinkCache.get(msg.url),
+        cached: true,
+      });
+      return; // IMPORTANT: no async
+    }
+
+    // 2️⃣ Otherwise fetch from API
 
     fetch(apiUrl)
       .then((r) => r.json())
       .then((data) => {
+        // Cache result
+        songLinkCache.set(msg.url, data);
+
         sendResponse({
           ok: true,
           data: data || null,
+          cached: false,
         });
       })
       .catch((err) => {

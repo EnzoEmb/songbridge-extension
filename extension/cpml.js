@@ -1,5 +1,5 @@
-const DEBUG = false;
-console.log("CPML EXTENSION INITED");
+const DEBUG = true;
+console.log("SONGBRIDGE EXTENSION INITED");
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;
 
@@ -8,19 +8,19 @@ DEBUG ? (document.body.style.border = "5px solid red") : null;
  * ENTRY POINT
  * =========================
  */
-if (location.hostname.includes("spotify.com")) {
-  waitForElement('.contentSpacing [data-testid="top-sentinel"]').then(() => {
-    startSpotify();
-    observeSpotifyRouteChanges();
-    attachSpotifyButtonHandler();
-    observerSpotifyNowPlaying();
-  });
-}
+// if (location.hostname.includes("spotify.com")) {
+//   waitForElement('.contentSpacing [data-testid="top-sentinel"]').then(() => {
+//     startSpotify();
+//     observeSpotifyRouteChanges();
+//     attachSpotifyButtonHandler();
+//     observerSpotifyNowPlaying();
+//   });
+// }
 
 if (location.hostname.includes("youtube.com")) {
-  startYoutube();
-  attachYoutubeButtonHandler();
-  observerYoutubeNowPlaying();
+  waitForElement("#contents").then(() => {
+    startYTM();
+  });
 }
 
 /**
