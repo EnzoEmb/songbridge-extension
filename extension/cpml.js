@@ -1,3 +1,4 @@
+const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 const DEBUG = false;
 console.log("SONGBRIDGE EXTENSION INITED");
 

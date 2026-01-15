@@ -195,7 +195,7 @@ function sendSpotifyUpdate() {
   console.log(data);
   if (!data) return;
 
-  browser.runtime.sendMessage({
+  browserAPI.runtime.sendMessage({
     type: "NOW_PLAYING",
     payload: data,
   });

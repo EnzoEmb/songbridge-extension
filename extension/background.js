@@ -1,5 +1,4 @@
 const browserAPI = typeof browser !== "undefined" ? browser : chrome;
-
 let nowPlaying = null;
 const songLinkCache = new Map();
 
@@ -108,7 +107,7 @@ browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
  * Now playing broadcaster
  */
 function broadcast() {
-  browser.runtime
+  browserAPI.runtime
     .sendMessage({
       type: "NOW_PLAYING_UPDATE",
       payload: nowPlaying,

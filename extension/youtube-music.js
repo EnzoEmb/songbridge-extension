@@ -119,7 +119,7 @@ function sendNowPlaying() {
   if (!data) return;
   console.log("sendNowPlaying", data);
 
-  browser.runtime.sendMessage({
+  browserAPI.runtime.sendMessage({
     type: "NOW_PLAYING",
     payload: data,
   });

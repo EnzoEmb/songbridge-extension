@@ -1,6 +1,6 @@
-console.log("Popup opened");
-
+const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 const currentlyPlayingDiv = document.querySelector(".currently-playing");
+console.log("Popup opened");
 
 function render(data) {
   if (!data) {
@@ -75,7 +75,7 @@ function render(data) {
 
       btn.classList.add("loading");
 
-      browser.runtime.sendMessage({ type: "GET_SONGLINK", url }).then((response) => {
+      browserAPI.runtime.sendMessage({ type: "GET_SONGLINK", url }).then((response) => {
         btn.classList.remove("loading");
 
         // add links to all buttons
@@ -107,7 +107,7 @@ function render(data) {
 }
 
 /* 1️⃣ Request state when popup opens */
-browser.runtime
+browserAPI.runtime
   .sendMessage({ type: "GET_NOW_PLAYING" })
   .then(render)
   .catch(() => {
@@ -115,7 +115,7 @@ browser.runtime
   });
 
 /* 2️⃣ Listen for live updates (optional) */
-browser.runtime.onMessage.addListener((msg) => {
+browserAPI.runtime.onMessage.addListener((msg) => {
   if (msg.type === "NOW_PLAYING_UPDATE") {
     render(msg.payload);
   }
