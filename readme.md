@@ -1,4 +1,4 @@
-<img alt="songbridge" src="https://github.com/EnzoEmb/songbridge-extension/blob/14aee8f8f6bde9fe08ce715d0ff26d813af53474/assets/img/repo-og.png">
+<img alt="songbridge" src="https://github.com/EnzoEmb/songbridge-extension/blob/2d551aa29a60a8bdf5b2da60682d8ffd861a3a2e/extension/assets/img/repo-og.png">
 
 This Firefox/Chrome extension adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 
