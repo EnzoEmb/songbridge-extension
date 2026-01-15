@@ -9,7 +9,7 @@ function render(data) {
   }
   const url = data.song_url;
 
-  // console.log("Popup Data", data);
+  console.log("Popup Now Playing Data", data);
 
   currentlyPlayingDiv.innerHTML = `
     <div>
@@ -65,8 +65,6 @@ function render(data) {
   links.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      btn.classList.add("loading");
-
       console.log("requesting link,", url);
 
       //if link open, otherwise fetch
@@ -75,13 +73,15 @@ function render(data) {
         return;
       }
 
+      btn.classList.add("loading");
+
       browser.runtime.sendMessage({ type: "GET_SONGLINK", url }).then((response) => {
         btn.classList.remove("loading");
 
         // add links to all buttons
         if (response?.ok && response?.data?.linksByPlatform) {
           const platformLinks = response.data.linksByPlatform;
-          const service = btn.className;
+          const service = btn.getAttribute("platform");
           const link = platformLinks[service]?.url;
           if (link) {
             window.open(link);
