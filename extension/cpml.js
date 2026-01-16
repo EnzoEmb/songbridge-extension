@@ -1,5 +1,5 @@
 const browserAPI = browser;
-const DEBUG = false;
+const DEBUG = true;
 console.log("SONGBRIDGE EXTENSION INITED");
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;

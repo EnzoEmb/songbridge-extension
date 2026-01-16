@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "SongBridge — Link Spotify & YouTube Music",
+  "version": "0.3",
+  "description": "Adds a link to jump between music platforms",
+
+  "action": {
+    "default_popup": "popup.html"
+  },
+
+  "icons": {
+    "16": "assets/icons/icon_2-16.png",
+    "32": "assets/icons/icon_2-32.png",
+    "48": "assets/icons/icon_2-48.png",
+    "128": "assets/icons/icon_2-128.png",
+    "256": "assets/icons/icon_2-256.png"
+  },
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://music.youtube.com/*", "*://open.spotify.com/*"],
+      "js": ["spotify.js", "youtube-music.js", "cpml.js"],
+      "css": ["assets/css/style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "permissions": ["tabs", "activeTab", "storage"],
+
+  "host_permissions": [
+    "https://api.song.link/*",
+    "*://music.youtube.com/*",
+    "*://open.spotify.com/*"
+  ]
+}

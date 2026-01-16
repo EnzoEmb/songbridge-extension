@@ -1,137 +1,169 @@
-const browserAPI = browser;
-let nowPlaying = null;
-const songLinkCache = new Map();
+let storageArea;
 
-browserAPI.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === "NOW_PLAYING" && nowPlaying?.song_url !== msg.payload.song_url) {
-    nowPlaying = {
-      ...msg.payload,
-      tabId: sender.tab.id,
-      url: sender.tab.url,
-      timestamp: Date.now(),
-    };
-    console.log("Now playing:", nowPlaying);
-    broadcast();
+if (chrome.storage && chrome.storage.session) {
+  // Chrome MV3
+  storageArea = chrome.storage.session;
+} else {
+  // Firefox MV2
+  storageArea = chrome.storage.local;
+}
+
+function storageGet(key) {
+  return new Promise((resolve) => {
+    storageArea.get(key, (result) => {
+      resolve(result);
+    });
+  });
+}
+
+function storageSet(obj) {
+  return new Promise((resolve) => {
+    storageArea.set(obj, resolve);
+  });
+}
+
+function storageRemove(key) {
+  return new Promise((resolve) => {
+    storageArea.remove(key, resolve);
+  });
+}
+
+function sendMessageAsync(message) {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.runtime.sendMessage(message, (response) => {
+        const err = chrome.runtime.lastError;
+        if (err) {
+          reject(err);
+        } else {
+          resolve(response);
+        }
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+let songLinkCache = new Map();
+
+/* ===========================
+   MESSAGE HANDLER (PROMISE-BASED)
+=========================== */
+chrome.runtime.onMessage.addListener((msg, sender) => {
+  /* 🎵 NOW PLAYING UPDATE */
+  if (msg.type === "NOW_PLAYING") {
+    return storageGet("nowPlaying").then(({ nowPlaying }) => {
+      if (nowPlaying?.song_url === msg.payload.song_url) return;
+
+      const updated = {
+        ...msg.payload,
+        tabId: sender.tab?.id,
+        url: sender.tab?.url,
+        timestamp: Date.now(),
+      };
+
+      return storageSet({ nowPlaying: updated }).then(() => {
+        broadcast(updated);
+      });
+    });
   }
 
+  /* 📥 GET NOW PLAYING */
   if (msg.type === "GET_NOW_PLAYING") {
-    sendResponse(nowPlaying);
+    return storageGet("nowPlaying").then((r) => r.nowPlaying || null);
   }
 
+  /* 🔗 GET SONGLINK */
   if (msg.type === "GET_SONGLINK") {
-    const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${msg.url}`;
-    // 1️⃣ Return cached result if available
     if (songLinkCache.has(msg.url)) {
-      sendResponse({
+      return Promise.resolve({
         ok: true,
         data: songLinkCache.get(msg.url),
         cached: true,
       });
-      return; // IMPORTANT: no async
     }
 
-    // 2️⃣ Otherwise fetch from API
-
-    fetch(apiUrl)
+    return fetch(`https://api.song.link/v1-alpha.1/links?url=${msg.url}`)
       .then((r) => r.json())
       .then((data) => {
-        // Cache result
         songLinkCache.set(msg.url, data);
-
-        sendResponse({
-          ok: true,
-          data: data || null,
-          cached: false,
-        });
+        return { ok: true, data, cached: false };
       })
-      .catch((err) => {
-        sendResponse({
-          ok: false,
-          error: err.toString(),
-        });
-      });
-
-    return true;
+      .catch((err) => ({
+        ok: false,
+        error: err.toString(),
+      }));
   }
 
+  /* 🎧 GET YT MUSIC FROM SPOTIFY */
   if (msg.type === "GET_YT_MUSIC") {
-    const apiUrl = `https://api.song.link/v1-alpha.1/links?url=spotify:track:${msg.track_id}&songIfSingle=true`;
-
-    fetch(apiUrl)
+    return fetch(
+      `https://api.song.link/v1-alpha.1/links?url=spotify:track:${msg.track_id}&songIfSingle=true`
+    )
       .then((r) => r.json())
-      .then((data) => {
-        sendResponse({
-          ok: true,
-          ytMusicLink: data.linksByPlatform?.youtubeMusic?.url || null,
-        });
-      })
-      .catch((err) => {
-        sendResponse({
-          ok: false,
-          error: err.toString(),
-        });
-      });
-
-    return true;
+      .then((data) => ({
+        ok: true,
+        ytMusicLink: data.linksByPlatform?.youtubeMusic?.url || null,
+      }))
+      .catch((err) => ({
+        ok: false,
+        error: err.toString(),
+      }));
   }
 
+  /* 🎵 GET SPOTIFY FROM YOUTUBE */
   if (msg.type === "GET_SPO_MUSIC") {
     const ytUrl = msg.video_id.startsWith("http")
       ? msg.video_id
       : `https://www.youtube.com/watch?v=${msg.video_id}`;
 
-    const apiUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(
-      ytUrl
-    )}&songIfSingle=true`;
-
-    fetch(apiUrl)
+    return fetch(
+      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(ytUrl)}&songIfSingle=true`
+    )
       .then((r) => r.json())
-      .then((data) => {
-        sendResponse({
-          ok: true,
-          spotifyLink: data.linksByPlatform?.spotify?.url || null,
-        });
-      })
-      .catch((err) => {
-        sendResponse({
-          ok: false,
-          error: err.toString(),
-        });
-      });
-
-    return true;
+      .then((data) => ({
+        ok: true,
+        spotifyLink: data.linksByPlatform?.spotify?.url || null,
+      }))
+      .catch((err) => ({
+        ok: false,
+        error: err.toString(),
+      }));
   }
 });
 
-/**
- * Now playing broadcaster
- */
-function broadcast() {
-  browserAPI.runtime
-    .sendMessage({
-      type: "NOW_PLAYING_UPDATE",
-      payload: nowPlaying,
-    })
-    .catch(() => {});
+/* ===========================
+   SAFE BROADCAST
+=========================== */
+function broadcast(nowPlaying) {
+  sendMessageAsync({
+    type: "NOW_PLAYING_UPDATE",
+    payload: nowPlaying,
+  }).catch(() => {
+    // Popup not open → ignore
+  });
 }
 
-browserAPI.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  // console.log("tab REMOVED");
-  if (nowPlaying && tabId === nowPlaying.tabId) {
-    nowPlaying = null;
-    broadcast();
-  }
+/* ===========================
+   TAB EVENTS
+=========================== */
+chrome.tabs.onRemoved.addListener((tabId) => {
+  storageGet("nowPlaying").then(({ nowPlaying }) => {
+    if (nowPlaying?.tabId === tabId) {
+      storageRemove("nowPlaying");
+      broadcast(null);
+    }
+  });
 });
 
-browserAPI.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  // Reload detected
-  if (changeInfo.status === "loading" && tab.url) {
-    // console.log("Tab reloading:", tabId, tab.url);
-
-    // Example: clear nowPlaying if its tab reloads
-    if (nowPlaying && tabId === nowPlaying.tabId) {
-      nowPlaying = null;
-      broadcast();
-    }
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status === "loading") {
+    storageGet("nowPlaying").then(({ nowPlaying }) => {
+      if (nowPlaying?.tabId === tabId) {
+        storageRemove("nowPlaying");
+        broadcast(null);
+      }
+    });
   }
 });
