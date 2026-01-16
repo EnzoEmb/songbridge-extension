@@ -32,7 +32,9 @@
     "128": "assets/icons/icon_2-128.png",
     "256": "assets/icons/icon_2-256.png"
   },
-  "data_collection_permissions": {
-    "required": false
+  "browser_specific_settings": {
+    "gecko": {
+      "data_collection_permissions": { "required": ["none"] }
+    }
   }
 }
