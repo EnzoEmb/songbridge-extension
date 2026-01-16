@@ -31,5 +31,8 @@
     "48": "assets/icons/icon_2-48.png",
     "128": "assets/icons/icon_2-128.png",
     "256": "assets/icons/icon_2-256.png"
+  },
+  "data_collection_permissions": {
+    "required": false
   }
 }
