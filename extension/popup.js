@@ -1,6 +1,11 @@
 const browserAPI = browser;
 const currentlyPlayingDiv = document.querySelector(".currently-playing");
+const manifest = browser.runtime.getManifest();
+const version = manifest.version;
+
 console.log("Popup opened");
+
+document.querySelector(".version").innerText = `v${version}`;
 
 function render(data) {
   if (!data) {
@@ -22,8 +27,8 @@ function render(data) {
             <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
           </div></div>
           <div class="title" title="${data.title} - ${data.artist}">${data.title} - ${
-    data.artist
-  }</div>
+            data.artist
+          }</div>
       
         </div>
       </div>

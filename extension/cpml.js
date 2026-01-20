@@ -1,6 +1,8 @@
 const browserAPI = browser;
 const DEBUG = false;
-console.log("SONGBRIDGE EXTENSION INITED");
+const manifest = browser.runtime.getManifest();
+const version = manifest.version;
+console.log("SONGBRIDGE v" + version + " EXTENSION INITED");
 
 DEBUG ? (document.body.style.border = "5px solid red") : null;
 

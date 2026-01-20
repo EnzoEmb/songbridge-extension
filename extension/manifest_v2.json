@@ -21,7 +21,7 @@
     }
   ],
 
-  "permissions": ["tabs", "activeTab", "storage", "https://api.song.link/*"],
+  "permissions": ["tabs", "storage", "https://api.song.link/*"],
 
   "icons": {
     "16": "assets/icons/icon_2-16.png",
