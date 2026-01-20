@@ -35,8 +35,18 @@ function render(data) {
             data.artist
           }</div></div>
       
+        <div class="playbar">
+          <button class="btn-prev"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="M5.3 29.3h-4V2.7h4v26.7Zm16-22.6h1.3v2.7h-1.3v1.3H20V12h-1.3v1.3h12v5.3h-12v1.3H20v1.3h1.3v1.3h1.3v2.7h-1.3v1.3h-2.7v-1.3h-1.3v-1.3H16v-1.3h-1.3v-1.3h-1.3V20h-1.3v-1.3h-1.3v-1.3H9.5v-2.7h1.3v-1.3h1.3v-1.3h1.3v-1.3h1.3V9.5H16V8.2h1.3V6.9h1.3V5.6h2.7v1.3Z"/></svg></button>
+          <button class="btn-play">
+          <div class="play"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M22 11v2h-1v1h-1v1h-2v1h-2v1h-1v1h-2v1h-2v1h-1v1H8v1H6v1H3v-1H2V2h1V1h3v1h2v1h2v1h1v1h2v1h2v1h1v1h2v1h2v1h1v1z"/></svg></div>
+          <div class="pause"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M23 2v20h-1v1h-7v-1h-1V2h1V1h7v1zM9 2h1v20H9v1H2v-1H1V2h1V1h7z"/></svg></div>
+          </button>
+          <button class="btn-next"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20 2h3v20h-3zM8 4h2v1h1v1h1v1h1v1h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H8v-1H7v-2h1v-1h1v-1h1v-1H1v-4h9V9H9V8H8V7H7V5h1z"/></svg></button>
+        </div>
+
         </div>
       </div>
+
 
       <div class="links">
         <a platform="spotify" class="spotify" href="#"  title="Go to Spotify">
