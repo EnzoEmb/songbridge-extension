@@ -20,13 +20,13 @@ main {
     color: white;
     font-size: 40px;
     position: relative;
-  }
-  span {
-    font-size: 15px;
-    position: absolute;
-    right: 10px;
-    bottom: 4px;
-    opacity: 0.4;
+    span {
+      font-size: 15px;
+      position: absolute;
+      right: 10px;
+      bottom: 4px;
+      opacity: 0.4;
+    }
   }
   .content {
     padding: 20px;
