@@ -3,11 +3,11 @@
 </p>
 
 <p align="center">
-This Firefox/Chrome extension adds utilities to music streaming web apps, currently Spotify and Youtube Music.
+Adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 </p>
 
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/songbridge/" target="_blank"><img alt="Firefox Add-on" src="https://img.shields.io/amo/v/songbridge?style=for-the-badge" href="https://addons.mozilla.org/en-US/firefox/addon/songbridge/"></a>
+  <a href="https://addons.mozilla.org/firefox/addon/songbridge/" target="_blank"><img alt="Firefox Add-on" src="https://img.shields.io/amo/v/songbridge?style=for-the-badge" href="https://addons.mozilla.org/firefox/addon/songbridge/"></a>
 
   <!-- <a><img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/v/epcehkbnafmjfkegnfoiblkheldeagoi?style=for-the-badge" href="https://chrome.google.com/webstore/detail/songbridge/epcehkbnafmjfkegnfoiblkheldeagoi"></a> -->
 </p>
