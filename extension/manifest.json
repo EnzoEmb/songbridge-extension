@@ -1,5 +1,5 @@
 {
-  "manifest_version": 6,
+  "manifest_version": 3,
   "name": "SongBridge — Link Spotify & YouTube Music",
   "version": "0.6",
   "description": "Adds a link to jump between music platforms",
