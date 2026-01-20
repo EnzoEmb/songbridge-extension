@@ -80,6 +80,17 @@ main {
     }
   }
   .btn-play {
+    .play {
+      display: none;
+    }
+    &.paused {
+      .play {
+        display: block;
+      }
+      .pause {
+        display: none;
+      }
+    }
     svg {
       width: 12px;
     }
@@ -87,9 +98,6 @@ main {
   svg {
     width: 15px;
     height: 15px;
-  }
-  .play {
-    display: none;
   }
 }
 .currently-playing > article {

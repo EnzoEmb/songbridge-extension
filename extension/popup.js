@@ -8,6 +8,7 @@ console.log("Popup opened");
 document.querySelector(".version").innerText = `v${version}`;
 
 function render(data) {
+  console.log("render data", data);
   if (!data) {
     currentlyPlayingDiv.replaceChildren();
     currentlyPlayingDiv.insertAdjacentHTML(
@@ -129,13 +130,23 @@ function render(data) {
   const previousButton = currentlyPlayingDiv.querySelector(".btn-prev");
   const nextButton = currentlyPlayingDiv.querySelector(".btn-next");
   playButton.onclick = () => {
-    browserAPI.runtime.sendMessage({ type: "TOGGLE_PLAYBACK" });
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      if (!tab?.id) return;
+      chrome.tabs.sendMessage(tab.id, { type: "YTM_TOGGLE_PLAY" });
+      playButton.classList.toggle("paused");
+    });
   };
   previousButton.onclick = () => {
-    browserAPI.runtime.sendMessage({ type: "PREVIOUS_TRACK" });
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      if (!tab?.id) return;
+      chrome.tabs.sendMessage(tab.id, { type: "YTM_PREVIOUS_TRACK" });
+    });
   };
   nextButton.onclick = () => {
-    browserAPI.runtime.sendMessage({ type: "NEXT_TRACK" });
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      if (!tab?.id) return;
+      chrome.tabs.sendMessage(tab.id, { type: "YTM_NEXT_TRACK" });
+    });
   };
 
   // title marquee
