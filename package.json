@@ -1,0 +1,22 @@
+{
+  "name": "songbridge-extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "zipff": "powershell -ExecutionPolicy Bypass -File ./scripts/zip-firefox.ps1",
+    "zipch": "powershell -ExecutionPolicy Bypass -File ./scripts/zip-chrome.ps1"
+  },
+  "keywords": [],
+  "author": "enzoemb",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EnzoEmb/songbridge-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EnzoEmb/songbridge-extension/issues"
+  },
+  "homepage": "https://github.com/EnzoEmb/songbridge-extension#readme"
+}
