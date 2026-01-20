@@ -142,15 +142,15 @@ function render(data) {
   };
 
   // title marquee
-  setTimeout(() => {
-    let smarquee = new Smarquee({
-      selector: ".title .marquee",
-      styleOptions: {
-        delay: "3s",
-      },
-    });
-    smarquee.init();
-  }, 1000);
+  // setTimeout(() => {
+  //   let smarquee = new Smarquee({
+  //     selector: ".title .marquee",
+  //     styleOptions: {
+  //       delay: "3s",
+  //     },
+  //   });
+  //   smarquee.init();
+  // }, 1000);
 }
 
 /* 1️⃣ Request state when popup opens */
