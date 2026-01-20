@@ -1,5 +1,5 @@
 This is a browser extension.
-May work in Firefox and Chrome.
+Should work in Firefox and Chrome.
 Do not use git commands.
 The extension has the following functions:
 
