@@ -8,6 +8,7 @@ function startSpotify() {
   observeSpotifyRouteChanges();
   // waitForElement(document.querySelector('[data-testid="now-playing-widget"]')).then(() => {
   observeSpotifyNowPlaying();
+  observeSpotifyPlaybar();
   // });
 }
 
@@ -18,7 +19,7 @@ function startSpotify() {
  */
 function addSpotifyLinks() {
   const CONTAINER_SELECTOR = document.querySelector(
-    '.contentSpacing [data-testid="top-sentinel"] ~ div[role="presentation"]'
+    '.contentSpacing [data-testid="top-sentinel"] ~ div[role="presentation"]',
   );
 
   if (!CONTAINER_SELECTOR) return;
@@ -46,7 +47,7 @@ function addSpotifyLinks() {
       <svg class="icon" xml:space="preserve" viewBox="0 0 192 192"><path fill="none" d="M0 0h192v192H0z"/><circle cx="96" cy="96" r="88" fill="red"/><path fill="#FFF" d="M96 50.32c25.19 0 45.68 20.49 45.68 45.68S121.19 141.68 96 141.68 50.32 121.19 50.32 96 70.81 50.32 96 50.32m0-6.4c-28.76 0-52.08 23.32-52.08 52.08 0 28.76 23.32 52.08 52.08 52.08s52.08-23.32 52.08-52.08c0-28.76-23.32-52.08-52.08-52.08z"/><path fill="#FFF" d="m79 122 45-26-45-26z"/></svg>
      <svg class="icon-loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a11 11 0 1 0 11 11A11 11 0 0 0 12 1Zm0 19a8 8 0 0 1-8-8 8 8 0 0 1 8-8Z" opacity=".3"/><path fill="currentColor" d="M10.1 1.2a11 11 0 0 0-9 8.9A1.6 1.6 0 0 0 2.5 12 1.5 1.5 0 0 0 4 10.7a8 8 0 0 1 6.7-6.6A1.4 1.4 0 0 0 12 2.7a1.6 1.6 0 0 0-1.9-1.5Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
     </button>
-    `
+    `,
     );
   }
 
@@ -192,11 +193,28 @@ function getSpotifyMetadata() {
 
 function sendSpotifyUpdate() {
   const data = getSpotifyMetadata();
-  console.log(data);
   if (!data) return;
+  console.log("sendNowPlaying", data);
 
   browserAPI.runtime.sendMessage({
     type: "NOW_PLAYING",
     payload: data,
+  });
+}
+
+function observeSpotifyPlaybar() {
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type == "TOGGLE_PLAY") {
+      const btn = document.querySelector("button[data-testid='control-button-playpause']");
+      btn?.click();
+    }
+    if (msg.type == "PREVIOUS_TRACK") {
+      const btn = document.querySelector("button[data-testid='control-button-skip-back']");
+      btn?.click();
+    }
+    if (msg.type == "NEXT_TRACK") {
+      const btn = document.querySelector("button[data-testid='control-button-skip-forward']");
+      btn?.click();
+    }
   });
 }

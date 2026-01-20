@@ -115,17 +115,6 @@ function observeYoutubeMusicNowPlaying() {
   });
 }
 
-function sendNowPlaying() {
-  const data = getYoutubeMusicPlayingSongData();
-  if (!data) return;
-  console.log("sendNowPlaying", data);
-
-  browserAPI.runtime.sendMessage({
-    type: "NOW_PLAYING",
-    payload: data,
-  });
-}
-
 function getYoutubeMusicPlayingSongData() {
   const title = document.querySelector(".title.ytmusic-player-bar")?.innerText;
   const artist = document.querySelector(".subtitle .byline > a:first-child")?.innerText;
@@ -153,17 +142,28 @@ function getYoutubeMusicPlayingSongData() {
   };
 }
 
+function sendNowPlaying() {
+  const data = getYoutubeMusicPlayingSongData();
+  if (!data) return;
+  console.log("sendNowPlaying", data);
+
+  browserAPI.runtime.sendMessage({
+    type: "NOW_PLAYING",
+    payload: data,
+  });
+}
+
 function observeYoutubeMusicPlaybar() {
   chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.type == "YTM_TOGGLE_PLAY") {
+    if (msg.type == "TOGGLE_PLAY") {
       const btn = document.querySelector("#play-pause-button");
       btn?.click();
     }
-    if (msg.type == "YTM_PREVIOUS_TRACK") {
+    if (msg.type == "PREVIOUS_TRACK") {
       const btn = document.querySelector(".previous-button.ytmusic-player-bar");
       btn?.click();
     }
-    if (msg.type == "YTM_NEXT_TRACK") {
+    if (msg.type == "NEXT_TRACK") {
       const btn = document.querySelector(".next-button.ytmusic-player-bar");
       btn?.click();
     }

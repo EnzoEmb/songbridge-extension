@@ -131,14 +131,14 @@ function render(data) {
   const previousButton = currentlyPlayingDiv.querySelector(".btn-prev");
   const nextButton = currentlyPlayingDiv.querySelector(".btn-next");
   playButton.onclick = () => {
-    chrome.tabs.sendMessage(data.tabId, { type: "YTM_TOGGLE_PLAY" });
+    chrome.tabs.sendMessage(data.tabId, { type: "TOGGLE_PLAY" });
     playButton.classList.toggle("paused");
   };
   previousButton.onclick = () => {
-    chrome.tabs.sendMessage(data.tabId, { type: "YTM_PREVIOUS_TRACK" });
+    chrome.tabs.sendMessage(data.tabId, { type: "PREVIOUS_TRACK" });
   };
   nextButton.onclick = () => {
-    chrome.tabs.sendMessage(data.tabId, { type: "YTM_NEXT_TRACK" });
+    chrome.tabs.sendMessage(data.tabId, { type: "NEXT_TRACK" });
   };
 
   // title marquee
