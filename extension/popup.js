@@ -125,6 +125,19 @@ function render(data) {
     });
   });
 
+  const playButton = currentlyPlayingDiv.querySelector(".btn-play");
+  const previousButton = currentlyPlayingDiv.querySelector(".btn-prev");
+  const nextButton = currentlyPlayingDiv.querySelector(".btn-next");
+  playButton.onclick = () => {
+    browserAPI.runtime.sendMessage({ type: "TOGGLE_PLAYBACK" });
+  };
+  previousButton.onclick = () => {
+    browserAPI.runtime.sendMessage({ type: "PREVIOUS_TRACK" });
+  };
+  nextButton.onclick = () => {
+    browserAPI.runtime.sendMessage({ type: "NEXT_TRACK" });
+  };
+
   // title marquee
   setTimeout(() => {
     let smarquee = new Smarquee({
