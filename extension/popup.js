@@ -9,7 +9,12 @@ document.querySelector(".version").innerText = `v${version}`;
 
 function render(data) {
   if (!data) {
-    currentlyPlayingDiv.innerHTML = "Nothing is playing";
+    currentlyPlayingDiv.replaceChildren();
+    currentlyPlayingDiv.insertAdjacentHTML(
+      "beforeend",
+      '<div class="nothing-playing">Nothing is playing <span>Play a song on Spotify or Youtube Music</span></div>',
+    );
+
     return;
   }
   const url = data.song_url;
