@@ -1,4 +1,4 @@
-<center style="text-align: center;">
+<p style="text-align: center;">
 <img alt="songbridge" src="icon.png" width="180">
 
 This Firefox/Chrome extension adds utilities to music streaming web apps, currently Spotify and Youtube Music.
@@ -7,7 +7,7 @@ This Firefox/Chrome extension adds utilities to music streaming web apps, curren
 
 <!-- <a><img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/v/epcehkbnafmjfkegnfoiblkheldeagoi?style=for-the-badge" href="https://chrome.google.com/webstore/detail/songbridge/epcehkbnafmjfkegnfoiblkheldeagoi"></a> -->
 
-</center>
+</p>
 
 ## Features
 
