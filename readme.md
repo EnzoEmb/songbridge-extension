@@ -15,7 +15,8 @@ Adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 ## Features
 
 - Adds a button to each song on Spotify and YouTube Music to each other platform
-- Observes the currently playing song and provides a quick access to links in the popup.
+- Observes the currently playing song and provides a quick links to other platforms
+- Provides quick player controls from the extension popup
 
 ## API
 
