@@ -71,11 +71,10 @@ main {
   }
   .title {
     font-size: 21px;
+    width: 250px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    display: block;
-    width: 260px;
   }
   .top {
     font-size: 15px;

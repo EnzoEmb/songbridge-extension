@@ -31,9 +31,9 @@ function render(data) {
           <div class="top">Playing on <div class="platform ${data.service}">
             <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
           </div></div>
-          <div class="title" title="${data.title} - ${data.artist}">${data.title} - ${
+          <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${
             data.artist
-          }</div>
+          }</div></div>
       
         </div>
       </div>
@@ -114,6 +114,17 @@ function render(data) {
       });
     });
   });
+
+  // title marquee
+  setTimeout(() => {
+    let smarquee = new Smarquee({
+      selector: ".title .marquee",
+      styleOptions: {
+        delay: "3s",
+      },
+    });
+    smarquee.init();
+  }, 1000);
 }
 
 /* 1️⃣ Request state when popup opens */
