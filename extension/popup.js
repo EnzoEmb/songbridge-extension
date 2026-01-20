@@ -22,7 +22,7 @@ function render(data) {
 
   console.log("Popup Now Playing Data", data);
 
-  currentlyPlayingDiv.innerHTML = `
+  currentlyPlayingDiv.innerHTML = /*html*/ `
     <article>
       <div class="header">
         <div class="image">
