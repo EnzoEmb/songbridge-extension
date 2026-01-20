@@ -126,27 +126,19 @@ function render(data) {
     });
   });
 
+  // playbar handlers
   const playButton = currentlyPlayingDiv.querySelector(".btn-play");
   const previousButton = currentlyPlayingDiv.querySelector(".btn-prev");
   const nextButton = currentlyPlayingDiv.querySelector(".btn-next");
   playButton.onclick = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (!tab?.id) return;
-      chrome.tabs.sendMessage(tab.id, { type: "YTM_TOGGLE_PLAY" });
-      playButton.classList.toggle("paused");
-    });
+    chrome.tabs.sendMessage(data.tabId, { type: "YTM_TOGGLE_PLAY" });
+    playButton.classList.toggle("paused");
   };
   previousButton.onclick = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (!tab?.id) return;
-      chrome.tabs.sendMessage(tab.id, { type: "YTM_PREVIOUS_TRACK" });
-    });
+    chrome.tabs.sendMessage(data.tabId, { type: "YTM_PREVIOUS_TRACK" });
   };
   nextButton.onclick = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (!tab?.id) return;
-      chrome.tabs.sendMessage(tab.id, { type: "YTM_NEXT_TRACK" });
-    });
+    chrome.tabs.sendMessage(data.tabId, { type: "YTM_NEXT_TRACK" });
   };
 
   // title marquee
