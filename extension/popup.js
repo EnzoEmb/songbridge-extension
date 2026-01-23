@@ -41,8 +41,8 @@ function renderSingle(data) {
           <div class="top">Playing on <div class="platform ${data.service}">
             <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
           </div>
-          <button class="btn-copy" title="Copy song link"><img src="/assets/img/PixelLinkSolid.svg" alt="Copy song link"></button>
           <button class="btn-focus" title="Focus tab"><img src="/assets/img/PixelEyeSolid.svg" alt="Focus tab"></button>
+          <button id="copy-song-link" class="btn-copy" title="Copy song link"><img src="/assets/img/PixelLinkSolid.svg" alt="Copy song link"></button>
           </div>
           <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${
             data.artist
@@ -154,6 +154,11 @@ function renderSingle(data) {
   const focusButton = article.querySelector(".btn-focus");
   focusButton.onclick = () => {
     browserAPI.runtime.sendMessage({ type: "FOCUS_TAB", tabId: data.tabId });
+  };
+
+  const copyButton = article.querySelector("#copy-song-link");
+  copyButton.onclick = () => {
+    navigator.clipboard.writeText(url);
   };
 
   return article;
