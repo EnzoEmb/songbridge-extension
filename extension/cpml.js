@@ -1,6 +1,6 @@
-const browserAPI = browser;
+const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 const DEBUG = false;
-const manifest = browser.runtime.getManifest();
+const manifest = browserAPI.runtime.getManifest();
 const version = manifest.version;
 console.log("SONGBRIDGE v" + version + " EXTENSION INITED");
 
