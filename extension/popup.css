@@ -30,6 +30,8 @@ main {
   }
   .content {
     padding: 10px;
+    max-height: 350px;
+    overflow: auto;
   }
 }
 .nothing-playing {
@@ -100,6 +102,12 @@ main {
     height: 15px;
   }
 }
+.currently-playing {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .currently-playing > article {
   border: 1px solid #b4d3d3;
   background: #edf7f7;

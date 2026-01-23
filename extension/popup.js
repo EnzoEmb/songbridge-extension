@@ -7,23 +7,32 @@ console.log("Popup opened");
 
 document.querySelector(".version").innerText = `v${version}`;
 
-function render(data) {
-  console.log("render data", data);
-  if (!data) {
+function render(nowPlayingTabs) {
+  console.log("render data", nowPlayingTabs);
+  if (!nowPlayingTabs || Object.keys(nowPlayingTabs).length === 0) {
     currentlyPlayingDiv.replaceChildren();
     currentlyPlayingDiv.insertAdjacentHTML(
       "beforeend",
-      '<div class="nothing-playing">Nothing is playing <span>Play a song on Spotify or Youtube Music</span></div>',
+      '<div class="nothing-playing">Nothing is playing <span>Play a song on Spotify or Youtube Music</span></div>'
     );
-
     return;
   }
+
+  currentlyPlayingDiv.replaceChildren();
+  for (const tabId in nowPlayingTabs) {
+    const nowPlaying = nowPlayingTabs[tabId];
+    const card = renderSingle(nowPlaying);
+    currentlyPlayingDiv.appendChild(card);
+  }
+}
+
+function renderSingle(data) {
   const url = data.song_url;
 
   console.log("Popup Now Playing Data", data);
 
-  currentlyPlayingDiv.innerHTML = /*html*/ `
-    <article>
+  const article = document.createElement("article");
+  article.innerHTML = /*html*/ `
       <div class="header">
         <div class="image">
           <img src="${data.cover || ""}" alt="">
@@ -33,8 +42,8 @@ function render(data) {
             <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
           </div></div>
           <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${
-            data.artist
-          }</div></div>
+    data.artist
+  }</div></div>
       
         <div class="playbar">
           <button class="btn-prev"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="M5.3 29.3h-4V2.7h4v26.7Zm16-22.6h1.3v2.7h-1.3v1.3H20V12h-1.3v1.3h12v5.3h-12v1.3H20v1.3h1.3v1.3h1.3v2.7h-1.3v1.3h-2.7v-1.3h-1.3v-1.3H16v-1.3h-1.3v-1.3h-1.3V20h-1.3v-1.3h-1.3v-1.3H9.5v-2.7h1.3v-1.3h1.3v-1.3h1.3v-1.3h1.3V9.5H16V8.2h1.3V6.9h1.3V5.6h2.7v1.3Z"/></svg></button>
@@ -78,11 +87,9 @@ function render(data) {
           <span>Odesli</span> <img src="/assets/img/odesli.svg" alt="Odesli"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="icon-loading" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity=".25"/><path fill="currentColor" d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
         </a>
       </div>
-    </article>
   `;
-
   // button handlers
-  const links = currentlyPlayingDiv.querySelectorAll(".links a");
+  const links = article.querySelectorAll(".links a");
   links.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -127,9 +134,9 @@ function render(data) {
   });
 
   // playbar handlers
-  const playButton = currentlyPlayingDiv.querySelector(".btn-play");
-  const previousButton = currentlyPlayingDiv.querySelector(".btn-prev");
-  const nextButton = currentlyPlayingDiv.querySelector(".btn-next");
+  const playButton = article.querySelector(".btn-play");
+  const previousButton = article.querySelector(".btn-prev");
+  const nextButton = article.querySelector(".btn-next");
   playButton.onclick = () => {
     chrome.tabs.sendMessage(data.tabId, { type: "TOGGLE_PLAY" });
     playButton.classList.toggle("paused");
@@ -141,16 +148,7 @@ function render(data) {
     chrome.tabs.sendMessage(data.tabId, { type: "NEXT_TRACK" });
   };
 
-  // title marquee
-  // setTimeout(() => {
-  //   let smarquee = new Smarquee({
-  //     selector: ".title .marquee",
-  //     styleOptions: {
-  //       delay: "3s",
-  //     },
-  //   });
-  //   smarquee.init();
-  // }, 1000);
+  return article;
 }
 
 /* 1️⃣ Request state when popup opens */

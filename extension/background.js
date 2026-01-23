@@ -53,8 +53,10 @@ let songLinkCache = new Map();
 chrome.runtime.onMessage.addListener((msg, sender) => {
   /* 🎵 NOW PLAYING UPDATE */
   if (msg.type === "NOW_PLAYING") {
-    return storageGet("nowPlaying").then(({ nowPlaying }) => {
-      if (nowPlaying?.song_url === msg.payload.song_url) return;
+    return storageGet("nowPlayingTabs").then(({ nowPlayingTabs }) => {
+      const tabs = nowPlayingTabs || {};
+
+      if (tabs[sender.tab?.id]?.song_url === msg.payload.song_url) return;
 
       const updated = {
         ...msg.payload,
@@ -63,15 +65,17 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         timestamp: Date.now(),
       };
 
-      return storageSet({ nowPlaying: updated }).then(() => {
-        broadcast(updated);
+      tabs[sender.tab?.id] = updated;
+
+      return storageSet({ nowPlayingTabs: tabs }).then(() => {
+        broadcast(tabs);
       });
     });
   }
 
   /* 📥 GET NOW PLAYING */
   if (msg.type === "GET_NOW_PLAYING") {
-    return storageGet("nowPlaying").then((r) => r.nowPlaying || null);
+    return storageGet("nowPlayingTabs").then((r) => r.nowPlayingTabs || null);
   }
 
   /* 🔗 GET SONGLINK */
@@ -149,20 +153,22 @@ function broadcast(nowPlaying) {
    TAB EVENTS
 =========================== */
 chrome.tabs.onRemoved.addListener((tabId) => {
-  storageGet("nowPlaying").then(({ nowPlaying }) => {
-    if (nowPlaying?.tabId === tabId) {
-      storageRemove("nowPlaying");
-      broadcast(null);
+  storageGet("nowPlayingTabs").then(({ nowPlayingTabs }) => {
+    if (nowPlayingTabs && nowPlayingTabs[tabId]) {
+      delete nowPlayingTabs[tabId];
+      storageSet({ nowPlayingTabs });
+      broadcast(nowPlayingTabs);
     }
   });
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === "loading") {
-    storageGet("nowPlaying").then(({ nowPlaying }) => {
-      if (nowPlaying?.tabId === tabId) {
-        storageRemove("nowPlaying");
-        broadcast(null);
+    storageGet("nowPlayingTabs").then(({ nowPlayingTabs }) => {
+      if (nowPlayingTabs && nowPlayingTabs[tabId]) {
+        delete nowPlayingTabs[tabId];
+        storageSet({ nowPlayingTabs });
+        broadcast(nowPlayingTabs);
       }
     });
   }
