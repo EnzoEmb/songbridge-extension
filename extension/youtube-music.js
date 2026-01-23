@@ -6,7 +6,7 @@ function startYTM() {
   listenYoutubeMusicLinks();
   observeYoutubeMusicContentChanges();
   observeYoutubeMusicNowPlaying();
-  observeYoutubeMusicPlaybar();
+  listenYoutubeMusicPlaybarBtns();
 }
 
 /**
@@ -153,7 +153,7 @@ function sendNowPlaying() {
   });
 }
 
-function observeYoutubeMusicPlaybar() {
+function listenYoutubeMusicPlaybarBtns() {
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.type == "TOGGLE_PLAY") {
       const btn = document.querySelector("#play-pause-button");

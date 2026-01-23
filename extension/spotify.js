@@ -8,7 +8,7 @@ function startSpotify() {
   observeSpotifyRouteChanges();
   // waitForElement(document.querySelector('[data-testid="now-playing-widget"]')).then(() => {
   observeSpotifyNowPlaying();
-  observeSpotifyPlaybar();
+  listenSpotifyPlaybarBtns();
   // });
 }
 
@@ -202,7 +202,7 @@ function sendSpotifyUpdate() {
   });
 }
 
-function observeSpotifyPlaybar() {
+function listenSpotifyPlaybarBtns() {
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.type == "TOGGLE_PLAY") {
       const btn = document.querySelector("button[data-testid='control-button-playpause']");
