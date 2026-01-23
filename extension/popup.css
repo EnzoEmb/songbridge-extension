@@ -172,6 +172,24 @@ main {
       height: 12px;
     }
   }
+  .btn-focus {
+    background: #00000010;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    img {
+      width: 15px;
+      height: 15px;
+      opacity: 0.5;
+    }
+    &:hover {
+      background: #00000020;
+    }
+  }
   .links {
     display: flex;
     gap: 2px;

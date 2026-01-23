@@ -13,7 +13,7 @@ function render(nowPlayingTabs) {
     currentlyPlayingDiv.replaceChildren();
     currentlyPlayingDiv.insertAdjacentHTML(
       "beforeend",
-      '<div class="nothing-playing">Nothing is playing <span>Play a song on Spotify or Youtube Music</span></div>'
+      '<div class="nothing-playing">Nothing is playing <span>Play a song on Spotify or Youtube Music</span></div>',
     );
     return;
   }
@@ -40,10 +40,12 @@ function renderSingle(data) {
         <div class="right">
           <div class="top">Playing on <div class="platform ${data.service}">
             <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
-          </div></div>
+          </div>
+          <button class="btn-focus" title="Focus tab"><img src="/assets/img/PixelEyeSolid.svg" alt="Focus tab"></button>
+          </div>
           <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${
-    data.artist
-  }</div></div>
+            data.artist
+          }</div></div>
       
         <div class="playbar">
           <button class="btn-prev"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="M5.3 29.3h-4V2.7h4v26.7Zm16-22.6h1.3v2.7h-1.3v1.3H20V12h-1.3v1.3h12v5.3h-12v1.3H20v1.3h1.3v1.3h1.3v2.7h-1.3v1.3h-2.7v-1.3h-1.3v-1.3H16v-1.3h-1.3v-1.3h-1.3V20h-1.3v-1.3h-1.3v-1.3H9.5v-2.7h1.3v-1.3h1.3v-1.3h1.3v-1.3h1.3V9.5H16V8.2h1.3V6.9h1.3V5.6h2.7v1.3Z"/></svg></button>
@@ -146,6 +148,11 @@ function renderSingle(data) {
   };
   nextButton.onclick = () => {
     chrome.tabs.sendMessage(data.tabId, { type: "NEXT_TRACK" });
+  };
+
+  const focusButton = article.querySelector(".btn-focus");
+  focusButton.onclick = () => {
+    browserAPI.runtime.sendMessage({ type: "FOCUS_TAB", tabId: data.tabId });
   };
 
   return article;

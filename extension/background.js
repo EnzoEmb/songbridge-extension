@@ -78,6 +78,14 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
     return storageGet("nowPlayingTabs").then((r) => r.nowPlayingTabs || null);
   }
 
+  /* 👁️ FOCUS TAB */
+  if (msg.type === "FOCUS_TAB") {
+    chrome.tabs.get(msg.tabId, (tab) => {
+      chrome.windows.update(tab.windowId, { focused: true });
+      chrome.tabs.update(msg.tabId, { active: true });
+    });
+  }
+
   /* 🔗 GET SONGLINK */
   if (msg.type === "GET_SONGLINK") {
     if (songLinkCache.has(msg.url)) {
