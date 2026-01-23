@@ -41,6 +41,7 @@ function renderSingle(data) {
           <div class="top">Playing on <div class="platform ${data.service}">
             <span><img src="/assets/img/${data.service}.svg"> ${data.service}</span>
           </div>
+          <button class="btn-copy" title="Copy song link"><img src="/assets/img/PixelLinkSolid.svg" alt="Copy song link"></button>
           <button class="btn-focus" title="Focus tab"><img src="/assets/img/PixelEyeSolid.svg" alt="Focus tab"></button>
           </div>
           <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${

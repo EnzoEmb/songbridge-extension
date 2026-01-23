@@ -1,7 +1,7 @@
 This is a browser extension.
 Should work in Firefox and Chrome.
 Do not use git commands.
-Dont worry that much about css styling. keep it simple.
+Dont worry that much about css styling. keep it simple and make it last priority.
 
 The extension has the following functions:
 
