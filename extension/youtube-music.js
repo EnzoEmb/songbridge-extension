@@ -105,49 +105,68 @@ function observeYoutubeMusicNowPlaying() {
   //   sendNowPlaying();
   //   console.log(11);
   // });
-
   // Observe DOM changes (song changes)
-  const observer = new MutationObserver(() => {
-    console.log(22);
-    sendNowPlaying();
-  });
+  // const observer = new MutationObserver(() => {
+  //   console.log(22);
+  //   sendNowPlaying();
+  // });
+  // observer.observe(document.querySelector(".ytmusic-player-bar .content-info-wrapper"), {
+  //   childList: true,
+  //   subtree: true,
+  //   characterData: true,
+  // });
 
-  observer.observe(document.querySelector(".ytmusic-player-bar .content-info-wrapper"), {
-    childList: true,
-    subtree: true,
-    characterData: true,
+  window.addEventListener("message", (event) => {
+    if (event.source !== window) return;
+    if (event.data?.source !== "songbridge") return;
+
+    if (event.data.type === "YTM_NOW_PLAYING") {
+      // console.log("Now playing videoId:", event.data);
+
+      sendNowPlaying(event.data.payload);
+    }
   });
 }
 
-function getYoutubeMusicPlayingSongData() {
-  const title = document.querySelector(".title.ytmusic-player-bar")?.innerText;
-  const artist = document.querySelector(".subtitle .byline > a:first-child")?.innerText;
-  const song_url = getCurrentYTMusicUrl();
+// function getYoutubeMusicPlayingSongData(id) {
+//   const title = document.querySelector(".title.ytmusic-player-bar")?.innerText;
+//   const artist = document.querySelector(".subtitle .byline > a:first-child")?.innerText;
+//   const song_url = id;
 
-  // const isPlaying = document.querySelector(
-  //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
-  // )
-  //   ? true
-  //   : false;
+//   // const isPlaying = document.querySelector(
+//   //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
+//   // )
+//   //   ? true
+//   //   : false;
+
+//   const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
+
+//   // if (!title || !artist || !song_url) return null;
+
+//   return {
+//     title,
+//     artist,
+//     song_url,
+//     service: "youtube-music",
+//     cover,
+//     // isPlaying,
+//   };
+// }
+
+function sendNowPlaying(payload) {
+  // const data = getYoutubeMusicPlayingSongData(payload);
+  if (!payload) return;
 
   const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
 
-  // if (!title || !artist || !song_url) return null;
-
-  return {
-    title,
-    artist,
-    song_url,
+  const data = {
+    title: payload.title,
+    artist: payload.artist,
+    song_url: payload.url,
     service: "youtube-music",
     cover,
-    // isPlaying,
   };
-}
 
-function sendNowPlaying() {
-  const data = getYoutubeMusicPlayingSongData();
-  console.log({ data });
-  if (!data) return;
   console.log("sendNowPlaying", data);
 
   browserAPI.runtime.sendMessage({
@@ -176,25 +195,89 @@ function listenYoutubeMusicPlaybarBtns() {
 /**
  * helpers
  */
-function getCurrentYTMusicUrl() {
-  // 1️⃣ Try canonical link (best when available)
-  const canonical = document.querySelector('link[rel="canonical"]')?.href;
-  if (canonical?.includes("watch?v=")) {
-    return canonical;
-  }
+// function getCurrentYTMusicUrl() {
+//   // 1️⃣ Try canonical link (best when available)
+//   const canonical = document.querySelector('link[rel="canonical"]')?.href;
+//   if (canonical?.includes("watch?v=")) {
+//     return canonical;
+//   }
 
-  // 2️⃣ Try the player bar title link
-  const playerLink = document.querySelector('ytmusic-player-bar a[href*="watch"]')?.href;
-  if (playerLink) {
-    return playerLink;
-  }
+//   // 2️⃣ Try the player bar title link
+//   const playerLink = document.querySelector('ytmusic-player-bar a[href*="watch"]')?.href;
+//   if (playerLink) {
+//     return playerLink;
+//   }
 
-  // 3️⃣ Try current video ID from internal player state
-  const videoId = document.querySelector("ytmusic-player")?.playerApi?.getVideoData?.()?.video_id;
+//   // 3️⃣ Try current video ID from internal player state
+//   const videoId = document.querySelector("ytmusic-player")?.playerApi?.getVideoData?.()?.video_id;
 
-  if (videoId) {
-    return `https://music.youtube.com/watch?v=${videoId}`;
-  }
+//   if (videoId) {
+//     return `https://music.youtube.com/watch?v=${videoId}`;
+//   }
 
-  return null;
+//   return null;
+// }
+
+/**
+ *
+ *
+ *
+ *
+ */
+function injectPageScript() {
+  const script = document.createElement("script");
+
+  script.textContent = `
+    (function () {
+      let lastVideoId = null;
+
+      function getNowPlaying() {
+        const player = document.querySelector("ytmusic-player");
+        const videoId = player?.playerApi?.getVideoData?.()?.video_id;
+
+        if (!videoId) return null;
+
+        const title =
+          document.querySelector(".ytmusic-player-bar .title")?.textContent?.trim() ||
+          document.querySelector("ytmusic-player-bar .title")?.textContent?.trim() ||
+          null;
+
+        const artist =
+          document.querySelector(".ytmusic-player-bar .subtitle")?.textContent
+            ?.split("•")[0]
+            ?.trim() ||
+          null;
+
+        const url = "https://music.youtube.com/watch?v=" + videoId;
+
+        return { videoId, title, artist, url };
+      }
+
+      function tick() {
+        const data = getNowPlaying();
+
+        if (data && data.videoId !== lastVideoId) {
+          lastVideoId = data.videoId;
+
+          window.postMessage(
+            {
+              source: "songbridge",
+              type: "YTM_NOW_PLAYING",
+              payload: data
+            },
+            "*"
+          );
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      tick();
+    })();
+  `;
+
+  document.documentElement.appendChild(script);
+  script.remove();
 }
+
+injectPageScript();
