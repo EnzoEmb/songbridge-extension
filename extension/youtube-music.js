@@ -154,8 +154,9 @@ function observeYoutubeMusicNowPlaying() {
 // }
 
 function sendNowPlaying(payload) {
+  const browserAPI = typeof browser !== "undefined" ? browser : chrome;
   // const data = getYoutubeMusicPlayingSongData(payload);
-  if (!payload) return;
+  if (!payload || !payload.title) return;
 
   const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
 
@@ -164,7 +165,7 @@ function sendNowPlaying(payload) {
     artist: payload.artist,
     song_url: payload.url,
     service: "youtube-music",
-    cover,
+    cover: cover,
   };
 
   console.log("sendNowPlaying", data);
@@ -225,60 +226,74 @@ function listenYoutubeMusicPlaybarBtns() {
  * so we postmessage it from this script to the rest of the script here...
  *
  */
+
 function injectPageScript() {
+  const browserAPI = typeof browser !== "undefined" ? browser : chrome;
+
   const script = document.createElement("script");
+  script.src = browserAPI.runtime.getURL("yt-page.js");
+  script.type = "text/javascript";
+  script.onload = () => script.remove();
 
-  script.textContent = /*js*/ `
-    (function () {
-      let lastVideoId = null;
-
-      function getNowPlaying() {
-        const player = document.querySelector("ytmusic-player");
-        const videoId = player?.playerApi?.getVideoData?.()?.video_id;
-
-        if (!videoId) return null;
-
-        const title =
-          document.querySelector(".ytmusic-player-bar .title")?.textContent?.trim() ||
-          document.querySelector("ytmusic-player-bar .title")?.textContent?.trim() ||
-          null;
-
-        const artist =
-          document.querySelector(".ytmusic-player-bar .subtitle")?.textContent
-            ?.split("•")[0]
-            ?.trim() ||
-          null;
-
-        const url = "https://music.youtube.com/watch?v=" + videoId;
-
-        return { videoId, title, artist, url };
-      }
-
-      function tick() {
-        const data = getNowPlaying();
-
-        if (data && data.videoId !== lastVideoId) {
-          lastVideoId = data.videoId;
-
-          window.postMessage(
-            {
-              source: "songbridge",
-              type: "YTM_NOW_PLAYING",
-              payload: data
-            },
-            "*"
-          );
-        }
-
-        requestAnimationFrame(tick);
-      }
-
-      tick();
-    })();
-  `;
-
-  document.documentElement.appendChild(script);
-  script.remove();
+  (document.head || document.documentElement).appendChild(script);
 }
 
 injectPageScript();
+
+// function injectPageScript() {
+//   const script = document.createElement("script");
+
+//   script.textContent = /*js*/ `
+//     (function () {
+//       let lastVideoId = null;
+
+//       function getNowPlaying() {
+//         const player = document.querySelector("ytmusic-player");
+//         const videoId = player?.playerApi?.getVideoData?.()?.video_id;
+
+//         if (!videoId) return null;
+
+//         const title =
+//           document.querySelector(".ytmusic-player-bar .title")?.textContent?.trim() ||
+//           document.querySelector("ytmusic-player-bar .title")?.textContent?.trim() ||
+//           null;
+
+//         const artist =
+//           document.querySelector(".ytmusic-player-bar .subtitle")?.textContent
+//             ?.split("•")[0]
+//             ?.trim() ||
+//           null;
+
+//         const url = "https://music.youtube.com/watch?v=" + videoId;
+
+//         return { videoId, title, artist, url };
+//       }
+
+//       function tick() {
+//         const data = getNowPlaying();
+
+//         if (data && data.videoId !== lastVideoId) {
+//           lastVideoId = data.videoId;
+
+//           window.postMessage(
+//             {
+//               source: "songbridge",
+//               type: "YTM_NOW_PLAYING",
+//               payload: data
+//             },
+//             "*"
+//           );
+//         }
+
+//         requestAnimationFrame(tick);
+//       }
+
+//       tick();
+//     })();
+//   `;
+
+//   document.documentElement.appendChild(script);
+//   script.remove();
+// }
+
+// injectPageScript();
