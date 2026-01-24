@@ -101,10 +101,14 @@ function observeYoutubeMusicContentChanges() {
 
 function observeYoutubeMusicNowPlaying() {
   // Initial send
-  sendNowPlaying();
+  // waitForElement(".ytmusic-player-bar .content-info-wrapper").then(() => {
+  //   sendNowPlaying();
+  //   console.log(11);
+  // });
 
   // Observe DOM changes (song changes)
   const observer = new MutationObserver(() => {
+    console.log(22);
     sendNowPlaying();
   });
 
@@ -118,9 +122,7 @@ function observeYoutubeMusicNowPlaying() {
 function getYoutubeMusicPlayingSongData() {
   const title = document.querySelector(".title.ytmusic-player-bar")?.innerText;
   const artist = document.querySelector(".subtitle .byline > a:first-child")?.innerText;
-  const song_url = [...document.querySelectorAll("ytmusic-responsive-list-item-renderer a")].find(
-    (a) => a.textContent.trim() === title,
-  )?.href;
+  const song_url = getCurrentYTMusicUrl();
 
   // const isPlaying = document.querySelector(
   //   '[data-testid="control-button-playpause"] svg path[d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7z"]'
@@ -130,7 +132,7 @@ function getYoutubeMusicPlayingSongData() {
 
   const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
 
-  if (!title || !artist || !song_url) return null;
+  // if (!title || !artist || !song_url) return null;
 
   return {
     title,
@@ -144,6 +146,7 @@ function getYoutubeMusicPlayingSongData() {
 
 function sendNowPlaying() {
   const data = getYoutubeMusicPlayingSongData();
+  console.log({ data });
   if (!data) return;
   console.log("sendNowPlaying", data);
 
@@ -168,4 +171,30 @@ function listenYoutubeMusicPlaybarBtns() {
       btn?.click();
     }
   });
+}
+
+/**
+ * helpers
+ */
+function getCurrentYTMusicUrl() {
+  // 1️⃣ Try canonical link (best when available)
+  const canonical = document.querySelector('link[rel="canonical"]')?.href;
+  if (canonical?.includes("watch?v=")) {
+    return canonical;
+  }
+
+  // 2️⃣ Try the player bar title link
+  const playerLink = document.querySelector('ytmusic-player-bar a[href*="watch"]')?.href;
+  if (playerLink) {
+    return playerLink;
+  }
+
+  // 3️⃣ Try current video ID from internal player state
+  const videoId = document.querySelector("ytmusic-player")?.playerApi?.getVideoData?.()?.video_id;
+
+  if (videoId) {
+    return `https://music.youtube.com/watch?v=${videoId}`;
+  }
+
+  return null;
 }
