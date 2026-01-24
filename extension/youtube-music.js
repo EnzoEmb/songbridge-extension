@@ -219,15 +219,16 @@ function listenYoutubeMusicPlaybarBtns() {
 // }
 
 /**
- *
- *
- *
+ * YTM INJECTION
+ * script injected into the page to access YTM internal player API
+ * content scripts cant access page JS context directly
+ * so we postmessage it from this script to the rest of the script here...
  *
  */
 function injectPageScript() {
   const script = document.createElement("script");
 
-  script.textContent = `
+  script.textContent = /*js*/ `
     (function () {
       let lastVideoId = null;
 
