@@ -25,7 +25,7 @@ It allows and usage of 10 requests per minute, which should be sufficient for mo
 
 ## Changelog
 
-[0.6] - Better styles, add player controls, allow multiple playing songs, add focus and copy link buttons, changed ytm algorithm <br>
+[0.6] - Better styles, add player controls, allow multiple playing songs, add focus and copy link buttons, modified ytm algorithm <br>
 [0.5] - Remove unused permissions, show version info <br>
 [0.4] - Extension submit process fixes <br>
 [0.3] - Extension submit process fixes <br>
