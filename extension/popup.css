@@ -131,9 +131,9 @@ main {
     img {
       width: 100%;
       height: 100%;
-    }
-    &[isyoutube="true"] {
-      object-fit: cover;
+      &[isyoutube="true"] {
+        object-fit: cover;
+      }
     }
   }
   .title {
