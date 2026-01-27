@@ -1,4 +1,8 @@
+/**
+ * Script injected into YouTube Music pages
+ */
 (function () {
+  console.log("injected-youtube-music.js");
   let last = {
     videoId: null,
     title: null,

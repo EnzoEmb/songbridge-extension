@@ -36,5 +36,11 @@
     "https://api.song.link/*",
     "*://music.youtube.com/*",
     "*://open.spotify.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["injected-youtube-music.js"],
+      "matches": ["https://music.youtube.com/*"]
+    }
   ]
 }

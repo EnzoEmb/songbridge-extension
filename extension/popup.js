@@ -169,7 +169,7 @@ browserAPI.runtime
   .sendMessage({ type: "GET_NOW_PLAYING" })
   .then(render)
   .catch(() => {
-    render(null);
+    // render(null);
   });
 
 /* 2️⃣ Listen for live updates (optional) */

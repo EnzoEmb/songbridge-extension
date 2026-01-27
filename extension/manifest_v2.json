@@ -34,5 +34,11 @@
     "gecko": {
       "data_collection_permissions": { "required": ["none"] }
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["injected-youtube-music.js"],
+      "matches": ["https://music.youtube.com/*"]
+    }
+  ]
 }

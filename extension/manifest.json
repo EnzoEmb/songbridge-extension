@@ -39,7 +39,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["yt-page.js"],
+      "resources": ["injected-youtube-music.js"],
       "matches": ["https://music.youtube.com/*"]
     }
   ]

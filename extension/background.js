@@ -111,7 +111,7 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
   /* 🎧 GET YT MUSIC FROM SPOTIFY */
   if (msg.type === "GET_YT_MUSIC") {
     return fetch(
-      `https://api.song.link/v1-alpha.1/links?url=spotify:track:${msg.track_id}&songIfSingle=true`
+      `https://api.song.link/v1-alpha.1/links?url=spotify:track:${msg.track_id}&songIfSingle=true`,
     )
       .then((r) => r.json())
       .then((data) => ({
@@ -131,7 +131,7 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
       : `https://www.youtube.com/watch?v=${msg.video_id}`;
 
     return fetch(
-      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(ytUrl)}&songIfSingle=true`
+      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(ytUrl)}&songIfSingle=true`,
     )
       .then((r) => r.json())
       .then((data) => ({

@@ -231,7 +231,7 @@ function injectPageScript() {
   const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 
   const script = document.createElement("script");
-  script.src = browserAPI.runtime.getURL("yt-page.js");
+  script.src = browserAPI.runtime.getURL("injected-youtube-music.js");
   script.type = "text/javascript";
   script.onload = () => script.remove();
 
