@@ -16,8 +16,8 @@ $version = $manifest.version
 # Build zip name
 $zipName = "../extension_firefox_v$version.zip"
 
-# Zip contents
-Compress-Archive -Path * -DestinationPath $zipName -Force
+# ✅ Firefox-safe zip (NO backslashes)
+tar -a -c -f $zipName *
 
 Pop-Location
 
