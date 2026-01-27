@@ -158,7 +158,10 @@ function sendNowPlaying(payload) {
   // const data = getYoutubeMusicPlayingSongData(payload);
   if (!payload || !payload.title) return;
 
-  const cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
+  let cover = document.querySelector(".thumbnail-image-wrapper img")?.src;
+  if (cover == "https://music.youtube.com/") {
+    cover = `https://i3.ytimg.com/vi/${payload.videoId}/2.jpg`;
+  }
 
   const data = {
     title: payload.title,

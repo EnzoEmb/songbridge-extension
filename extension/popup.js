@@ -35,7 +35,7 @@ function renderSingle(data) {
   article.innerHTML = /*html*/ `
       <div class="header">
         <div class="image">
-          <img src="${data.cover || ""}" alt="">
+          <img src="${data.cover || ""}" isYoutube="${data.cover.includes("i3.ytimg.com") ? "true" : ""}" alt="">
         </div>
         <div class="right">
           <div class="top">Playing on <div class="platform ${data.service}">
