@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 const manifest = browserAPI.runtime.getManifest();
 const version = manifest.version;
