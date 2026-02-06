@@ -3,6 +3,30 @@ const currentlyPlayingDiv = document.querySelector(".currently-playing");
 const manifest = browser.runtime.getManifest();
 const version = manifest.version;
 
+let storageArea;
+
+if (chrome.storage && chrome.storage.session) {
+  // Chrome MV3
+  storageArea = chrome.storage.session;
+} else {
+  // Firefox MV2
+  storageArea = chrome.storage.local;
+}
+
+function storageGet(key) {
+  return new Promise((resolve) => {
+    storageArea.get(key, (result) => {
+      resolve(result);
+    });
+  });
+}
+
+function storageSet(obj) {
+  return new Promise((resolve) => {
+    storageArea.set(obj, resolve);
+  });
+}
+
 console.log("Popup opened");
 
 document.querySelector(".version").innerText = `v${version}`;
@@ -180,7 +204,9 @@ function renderSingle(data) {
     const cacheKey = `lyrics-${title}-${artist}`;
 
     // Try to load from cache first
-    const cachedLyrics = sessionStorage.getItem(cacheKey);
+    const cachedLyricsResult = await storageGet(cacheKey);
+    const cachedLyrics = cachedLyricsResult[cacheKey];
+
     if (cachedLyrics) {
       lyricsContent.textContent = cachedLyrics;
       copyLyricsButton.style.display = "block";
@@ -196,7 +222,7 @@ function renderSingle(data) {
         const fetchedLyrics = results[0].plainLyrics;
         lyricsContent.textContent = fetchedLyrics;
         copyLyricsButton.style.display = "block";
-        sessionStorage.setItem(cacheKey, fetchedLyrics); // Cache the fetched lyrics
+        await storageSet({ [cacheKey]: fetchedLyrics }); // Cache the fetched lyrics
       } else {
         lyricsContent.textContent = "Lyrics not found.";
       }
