@@ -28,17 +28,17 @@ Control playback directly from the extension popup — no tab switching needed.
 It uses the Songlink/Odesli API to fetch cross-platform music links. <br>
 It allows and usage of 10 requests per minute, which should be sufficient for most users.
 
-## Changelog
-
-[0.6] - Better styles, add player controls, allow multiple playing songs, add focus and copy link buttons, modified ytm algorithm <br>
-[0.5] - Remove unused permissions, show version info <br>
-[0.4] - Extension submit process fixes <br>
-[0.3] - Extension submit process fixes <br>
-[0.2] - Added currently playing popup <br>
-[0.1] - Initial demo
-
 ## Screens
 
 <p align="center">
 <img alt="songbridge" src="repo-og.png">
 </p>
+
+## Changelog
+
+[0.6] - Better styles, add player controls, allow multiple playing songs, add focus and copy link buttons, modified ytm algorithm <br>
+[0.2] - Remove unused permissions, show version info <br>
+[0.4] - Extension submit process fixes <br>
+[0.3] - Extension submit process fixes <br>
+[0.2] - Added currently playing popup <br>
+[0.1] - Initial demo
