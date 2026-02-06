@@ -2,9 +2,11 @@
 
 ## Overview
 
-SongBridge is a browser extension that helps users navigate between music streaming platforms by detecting the currently playing song and generating links to other platforms.
+SongBridge is a browser extension that helps users navigate between music streaming platforms by detecting the currently playing song, generating cross-platform links, and optionally displaying lyrics.
 
 The extension collects **no personally identifiable information**.
+
+---
 
 ## Information Collected
 
@@ -23,7 +25,7 @@ This includes, but is not limited to:
 
 ---
 
-### 2. Music Metadata (Temporary Processing)
+### 2. Music Metadata (Local Processing)
 
 While a supported music site is open, the extension temporarily reads **publicly available music metadata**, such as:
 
@@ -35,38 +37,48 @@ While a supported music site is open, the extension temporarily reads **publicly
 This data:
 
 - Is processed **locally in the browser**
-- Is kept **only in memory or session storage**
-- Is cleared when the tab is closed or reloaded
-- Is **not associated with a user identity**
+- May be cached **locally** to improve performance and reduce duplicate requests
+- Is **not linked to a user identity**
+- Is never transmitted except as described below
 
 ---
 
-### 3. Third-Party API Usage (Songlink / Odesli)
+### 3. Third-Party API Usage
 
-When generating cross-platform music links, the extension sends **only the song URL** to the **Songlink (Odesli) public API**.
+#### Songlink / Odesli API
 
-No personal data is sent to Songlink.
+To generate cross-platform music links, SongBridge sends **only the song URL** to the **Songlink (Odesli) public API**.
 
-SongBridge does **not**:
-
-- Send user identifiers
-- Send browsing history
-- Store or permanently cache API responses
-- Build databases from API results
+- No personal data is sent
+- No user identifiers are included
+- Responses may be **cached locally** to minimize repeated API calls
 
 Use of the Songlink API is subject to their Terms of Service:  
 https://song.link
 
 ---
 
+#### LRCLIB API (Lyrics)
+
+When the user requests lyrics, SongBridge sends **only the song title and artist name** to the **LRCLIB public API**.
+
+- No personal data or identifiers are sent
+- Lyrics are fetched **on demand only**
+- Retrieved lyrics may be **cached locally in the browser** to avoid repeated lookups
+
+Use of the LRCLIB API is subject to their terms:  
+https://lrclib.net
+
+---
+
 ## Data Storage
 
-- Temporary session data may be stored locally **only to preserve popup state**
-- No long-term storage of API responses
-- No profiling or analytics
-- No remote databases
+- All caching is performed **locally on the user’s device**
+- No remote databases are used
+- No long-term user profiles are created
+- No analytics or tracking data is collected
 
-All data remains on the user’s device.
+SongBridge does **not** sync, upload, or share stored data.
 
 ---
 
@@ -74,11 +86,11 @@ All data remains on the user’s device.
 
 SongBridge requests only the minimum permissions required for functionality:
 
-- **Site access (music platforms only)**  
+- **Site access (supported music platforms only)**  
   Used to detect currently playing music
 
 - **Network access**  
-  Used to request song link data from the Songlink (Odesli) API
+  Used to request song links (Songlink/Odesli) and lyrics (LRCLIB)
 
 No permissions are used for advertising, tracking, or analytics.
 
@@ -88,15 +100,15 @@ No permissions are used for advertising, tracking, or analytics.
 
 SongBridge does **not**:
 
-- Sell data
+- Sell user data
 - Share data with advertisers
 - Use trackers, cookies, or fingerprinting
-- Share data with third parties beyond the Songlink API request described above
+- Share data with third parties beyond the APIs explicitly described above
 
 ---
 
 ## Attribution & Third-Party Content
 
-Song metadata and links provided through the Songlink (Odesli) API remain the property of their respective owners.
+Song metadata, lyrics, and platform links remain the property of their respective owners and providers.
 
-The extension displays platform links **only for user convenience** and does not claim ownership of third-party content.
+SongBridge displays this content **solely for user convenience** and does not claim ownership of any third-party material.

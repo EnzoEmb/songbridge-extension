@@ -31,8 +31,16 @@ Jump to the playing tab instantly, copy song links, and manage multiple active p
 
 ## API
 
-It uses the Songlink/Odesli API to fetch cross-platform music links. <br>
-It allows and usage of 10 requests per minute, which should be sufficient for most users.
+Songbridge uses multiple public APIs to enhance the music experience:
+
+- 🔗 **Songlink / Odesli API**  
+  Used to fetch cross-platform links for the currently playing song  
+  (Spotify, YouTube Music, Apple Music, Deezer, SoundCloud, TIDAL, and more).  
+  The API allows up to **10 requests per minute**, which is sufficient for normal usage.
+
+- 🎤 **LRCLIB API**  
+  Used to search and retrieve **song lyrics** based on track title and artist.  
+  Lyrics are fetched on demand and cached locally to reduce repeated requests.
 
 ## Screens
 
