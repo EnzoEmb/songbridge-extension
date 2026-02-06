@@ -1,59 +1,87 @@
-const browserAPI = browser;
+const browserAPI = typeof browser !== "undefined" ? browser : chrome;
 const currentlyPlayingDiv = document.querySelector(".currently-playing");
-const manifest = browser.runtime.getManifest();
+const manifest = browserAPI.runtime.getManifest();
 const version = manifest.version;
-
-let storageArea;
-
-if (chrome.storage && chrome.storage.session) {
-  // Chrome MV3
-  storageArea = chrome.storage.session;
-} else {
-  // Firefox MV2
-  storageArea = chrome.storage.local;
-}
-
-function storageGet(key) {
-  return new Promise((resolve) => {
-    storageArea.get(key, (result) => {
-      resolve(result);
-    });
-  });
-}
-
-function storageSet(obj) {
-  return new Promise((resolve) => {
-    storageArea.set(obj, resolve);
-  });
-}
-
-console.log("Popup opened");
 
 document.querySelector(".version").innerText = `v${version}`;
 
+// ─────────────────────────────────────────────
+// Storage (Chrome + Firefox compatible)
+// ─────────────────────────────────────────────
+let storageArea;
+
+if (chrome?.storage?.session) {
+  storageArea = chrome.storage.session; // Chrome MV3
+} else {
+  storageArea = chrome.storage.local; // Firefox
+}
+
+const storageGet = (key) => new Promise((resolve) => storageArea.get(key, resolve));
+
+const storageSet = (obj) => new Promise((resolve) => storageArea.set(obj, resolve));
+
+console.log("Popup opened");
+
+// ─────────────────────────────────────────────
+// State (IMPORTANT)
+// ─────────────────────────────────────────────
+let lastRenderedState = null;
+
+// ─────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────
 function render(nowPlayingTabs) {
-  console.log("render data", nowPlayingTabs);
-  if (!nowPlayingTabs || Object.keys(nowPlayingTabs).length === 0) {
-    currentlyPlayingDiv.replaceChildren();
-    currentlyPlayingDiv.insertAdjacentHTML(
-      "beforeend",
-      '<div class="nothing-playing">Nothing is playing <span>Play a song on Spotify or Youtube Music</span></div>',
-    );
+  // Ignore empty / invalid updates
+  if (
+    !nowPlayingTabs ||
+    typeof nowPlayingTabs !== "object" ||
+    Object.keys(nowPlayingTabs).length === 0
+  ) {
+    if (!lastRenderedState) {
+      currentlyPlayingDiv.replaceChildren();
+      currentlyPlayingDiv.insertAdjacentHTML(
+        "beforeend",
+        `<div class="nothing-playing">
+          Nothing is playing
+          <span>Play a song on Spotify or Youtube Music</span>
+        </div>`,
+      );
+    }
     return;
   }
 
+  lastRenderedState = nowPlayingTabs;
+
   currentlyPlayingDiv.replaceChildren();
+
   for (const tabId in nowPlayingTabs) {
-    const nowPlaying = nowPlayingTabs[tabId];
-    const card = renderSingle(nowPlaying);
+    const card = renderSingle(nowPlayingTabs[tabId]);
     currentlyPlayingDiv.appendChild(card);
   }
 }
 
+// ─────────────────────────────────────────────
+// Initial state request (ONLY ONCE)
+// ─────────────────────────────────────────────
+browserAPI.runtime
+  .sendMessage({ type: "GET_NOW_PLAYING" })
+  .then(render)
+  .catch(() => {});
+
+// ─────────────────────────────────────────────
+// Live updates (ONLY ONCE)
+// ─────────────────────────────────────────────
+browserAPI.runtime.onMessage.addListener((msg) => {
+  if (msg?.type === "NOW_PLAYING_UPDATE") {
+    render(msg.payload);
+  }
+});
+
+// ─────────────────────────────────────────────
+// Your original renderSingle (HTML UNCHANGED)
+// ─────────────────────────────────────────────
 function renderSingle(data) {
   const url = data.song_url;
-
-  console.log("Popup Now Playing Data", data);
 
   const article = document.createElement("article");
   article.innerHTML = /*html*/ `
@@ -120,14 +148,14 @@ function renderSingle(data) {
         <pre id="lyrics-content" class="lyrics-content"></pre>
       </div>
   `;
-  // button handlers
-  const links = article.querySelectorAll(".links a");
-  links.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("requesting link,", url);
 
-      //if link open, otherwise fetch
+  // ───── Links (Songlink) ─────
+  const links = article.querySelectorAll(".links a");
+
+  links.forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+
       if (btn.hasAttribute("link")) {
         window.open(btn.getAttribute("link"));
         return;
@@ -135,82 +163,62 @@ function renderSingle(data) {
 
       btn.classList.add("loading");
 
-      browserAPI.runtime.sendMessage({ type: "GET_SONGLINK", url }).then((response) => {
+      try {
+        const response = await browserAPI.runtime.sendMessage({
+          type: "GET_SONGLINK",
+          url,
+        });
+
         btn.classList.remove("loading");
 
-        // add links to all buttons
         if (response?.ok && response?.data?.linksByPlatform) {
           const platformLinks = response.data.linksByPlatform;
-          const service = btn.getAttribute("platform");
-          const link = platformLinks[service]?.url;
-          if (link) {
-            window.open(link);
-            btn.setAttribute("link", link);
-          }
 
-          // set links for other buttons too
           links.forEach((otherBtn) => {
-            const service = otherBtn.attributes["platform"].value;
-            const link = platformLinks[service]?.url;
+            const service = otherBtn.getAttribute("platform");
+
             if (service === "odesli") {
               otherBtn.setAttribute("link", response.data.pageUrl);
             } else {
-              if (link) {
-                otherBtn.setAttribute("link", link);
-              }
+              const link = platformLinks[service]?.url;
+              if (link) otherBtn.setAttribute("link", link);
             }
           });
+
+          const service = btn.getAttribute("platform");
+          const finalLink =
+            service === "odesli" ? response.data.pageUrl : platformLinks[service]?.url;
+
+          if (finalLink) window.open(finalLink);
         }
-      });
+      } catch {
+        btn.classList.remove("loading");
+      }
     });
   });
-  /* 1️⃣ Request state when popup opens */
-  browserAPI.runtime
-    .sendMessage({ type: "GET_NOW_PLAYING" })
-    .then(render)
-    .catch(() => {
-      // render(null);
-    });
 
-  /* 2️⃣ Listen for live updates (optional) */
-  browserAPI.runtime.onMessage.addListener((msg) => {
-    if (msg.type === "NOW_PLAYING_UPDATE") {
-      render(msg.payload);
-    }
-  });
-
-  /**
-   *
-   * PLAYBACK BUTTONS
-   */
-  const playButton = article.querySelector(".btn-play");
-  const previousButton = article.querySelector(".btn-prev");
-  const nextButton = article.querySelector(".btn-next");
-  playButton.onclick = () => {
-    chrome.tabs.sendMessage(data.tabId, { type: "TOGGLE_PLAY" });
-    playButton.classList.toggle("paused");
-  };
-  previousButton.onclick = () => {
-    chrome.tabs.sendMessage(data.tabId, { type: "PREVIOUS_TRACK" });
-  };
-  nextButton.onclick = () => {
-    chrome.tabs.sendMessage(data.tabId, { type: "NEXT_TRACK" });
+  // ───── Playback controls ─────
+  article.querySelector(".btn-play").onclick = () => {
+    browserAPI.tabs.sendMessage(data.tabId, { type: "TOGGLE_PLAY" });
   };
 
-  const focusButton = article.querySelector(".btn-focus");
-  focusButton.onclick = () => {
+  article.querySelector(".btn-prev").onclick = () => {
+    browserAPI.tabs.sendMessage(data.tabId, { type: "PREVIOUS_TRACK" });
+  };
+
+  article.querySelector(".btn-next").onclick = () => {
+    browserAPI.tabs.sendMessage(data.tabId, { type: "NEXT_TRACK" });
+  };
+
+  article.querySelector(".btn-focus").onclick = () => {
     browserAPI.runtime.sendMessage({ type: "FOCUS_TAB", tabId: data.tabId });
   };
 
-  const copyButton = article.querySelector("#copy-song-link");
-  copyButton.onclick = () => {
+  article.querySelector("#copy-song-link").onclick = () => {
     navigator.clipboard.writeText(url);
   };
 
-  /**
-   *
-   * LYRICS
-   */
+  // ───── Lyrics (cached) ─────
   const getLyricsButton = article.querySelector("#get-lyrics");
   const lyricsContent = article.querySelector("#lyrics-content");
   const copyLyricsButton = article.querySelector("#copy-lyrics");
@@ -220,37 +228,32 @@ function renderSingle(data) {
     lyricsContent.textContent = "Loading lyrics...";
     copyLyricsButton.style.display = "none";
 
-    const title = data.title;
-    const artist = data.artist;
-    const cacheKey = `lyrics-${title}-${artist}`;
+    const cacheKey = `lyrics-${data.title}-${data.artist}`;
+    const cached = (await storageGet(cacheKey))[cacheKey];
 
-    // Try to load from cache first
-    const cachedLyricsResult = await storageGet(cacheKey);
-    const cachedLyrics = cachedLyricsResult[cacheKey];
-
-    if (cachedLyrics) {
-      lyricsContent.textContent = cachedLyrics;
+    if (cached) {
+      lyricsContent.textContent = cached;
       copyLyricsButton.style.display = "block";
       getLyricsButton.disabled = false;
       return;
     }
 
     try {
-      const response = await fetch(
-        `https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`,
+      const res = await fetch(
+        `https://lrclib.net/api/search?track_name=${encodeURIComponent(
+          data.title,
+        )}&artist_name=${encodeURIComponent(data.artist)}`,
       );
-      const results = await response.json();
+      const json = await res.json();
 
-      if (results && results.length > 0 && results[0].plainLyrics) {
-        const fetchedLyrics = results[0].plainLyrics;
-        lyricsContent.textContent = fetchedLyrics;
+      if (json?.[0]?.plainLyrics) {
+        lyricsContent.textContent = json[0].plainLyrics;
         copyLyricsButton.style.display = "block";
-        await storageSet({ [cacheKey]: fetchedLyrics }); // Cache the fetched lyrics
+        await storageSet({ [cacheKey]: json[0].plainLyrics });
       } else {
         lyricsContent.textContent = "Lyrics not found.";
       }
-    } catch (error) {
-      console.error("Error fetching lyrics:", error);
+    } catch {
       lyricsContent.textContent = "Error loading lyrics.";
     } finally {
       getLyricsButton.disabled = false;
