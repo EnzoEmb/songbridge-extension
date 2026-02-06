@@ -15,13 +15,19 @@ Adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 ## Features
 
 🎧 **Cross-platform shortcuts**  
-Quickly open the same song on **YouTube Music ↔ Spotify** with one click.
+Open the same song instantly on **YouTube Music ↔ Spotify** with a single click.
 
-🔗 **Smart music links**  
-Instant access to the song on other streaming platforms while it’s playing.
+🔗 **Smart universal links**  
+Get quick links to the currently playing song on **Spotify, YouTube Music, Apple Music, Deezer, SoundCloud, TIDAL**, and more.
 
 ⏯️ **Popup player controls**  
-Control playback directly from the extension popup — no tab switching needed.
+Play, pause, skip, or go back directly from the extension popup — no tab switching needed.
+
+🎤 **Lyrics on demand**  
+Fetch and view song lyrics right from the popup, with one-click copy support.
+
+👀 **Tab focus & utilities**  
+Jump to the playing tab instantly, copy song links, and manage multiple active players.
 
 ## API
 
@@ -36,9 +42,31 @@ It allows and usage of 10 requests per minute, which should be sufficient for mo
 
 ## Changelog
 
-[0.6] - Better styles, add player controls, allow multiple playing songs, add focus and copy link buttons, modified ytm algorithm <br>
-[0.2] - Remove unused permissions, show version info <br>
-[0.4] - Extension submit process fixes <br>
-[0.3] - Extension submit process fixes <br>
-[0.2] - Added currently playing popup <br>
-[0.1] - Initial demo
+**[0.7]**
+
+- 🎤 Added lyrics support (view & copy from popup)
+
+**[0.6]**
+
+- 🎨 Improved styles and UI polish
+- ⏯️ Added player controls (play / pause / next / previous)
+- 🎧 Support for multiple simultaneously playing tabs
+- 👀 Added focus tab & copy link buttons
+- ⚙️ Improved YouTube Music detection algorithm
+
+**[0.5]**
+
+- 🧹 Removed unused permissions
+- ℹ️ Added version info display
+
+**[0.3 - 0.4]**
+
+- 🛠️ Extension submission fixes
+
+**[0.2]**
+
+- 🎶 Added currently playing popup
+
+**[0.1]**
+
+- 🚀 Initial demo release
