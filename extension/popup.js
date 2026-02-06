@@ -78,7 +78,7 @@ browserAPI.runtime.onMessage.addListener((msg) => {
 });
 
 // ─────────────────────────────────────────────
-// Your original renderSingle (HTML UNCHANGED)
+// renderSingle
 // ─────────────────────────────────────────────
 function renderSingle(data) {
   const url = data.song_url;
