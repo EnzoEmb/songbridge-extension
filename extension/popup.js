@@ -177,14 +177,26 @@ function renderSingle(data) {
 
     const title = data.title;
     const artist = data.artist;
+    const cacheKey = `lyrics-${title}-${artist}`;
+
+    // Try to load from cache first
+    const cachedLyrics = sessionStorage.getItem(cacheKey);
+    if (cachedLyrics) {
+      lyricsContent.textContent = cachedLyrics;
+      copyLyricsButton.style.display = "block";
+      getLyricsButton.disabled = false;
+      return;
+    }
 
     try {
       const response = await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`);
       const results = await response.json();
 
       if (results && results.length > 0 && results[0].plainLyrics) {
-        lyricsContent.textContent = results[0].plainLyrics;
+        const fetchedLyrics = results[0].plainLyrics;
+        lyricsContent.textContent = fetchedLyrics;
         copyLyricsButton.style.display = "block";
+        sessionStorage.setItem(cacheKey, fetchedLyrics); // Cache the fetched lyrics
       } else {
         lyricsContent.textContent = "Lyrics not found.";
       }
