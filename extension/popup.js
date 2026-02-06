@@ -164,8 +164,25 @@ function renderSingle(data) {
       });
     });
   });
+  /* 1️⃣ Request state when popup opens */
+  browserAPI.runtime
+    .sendMessage({ type: "GET_NOW_PLAYING" })
+    .then(render)
+    .catch(() => {
+      // render(null);
+    });
 
-  // playbar handlers
+  /* 2️⃣ Listen for live updates (optional) */
+  browserAPI.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "NOW_PLAYING_UPDATE") {
+      render(msg.payload);
+    }
+  });
+
+  /**
+   *
+   * PLAYBACK BUTTONS
+   */
   const playButton = article.querySelector(".btn-play");
   const previousButton = article.querySelector(".btn-prev");
   const nextButton = article.querySelector(".btn-next");
@@ -190,6 +207,10 @@ function renderSingle(data) {
     navigator.clipboard.writeText(url);
   };
 
+  /**
+   *
+   * LYRICS
+   */
   const getLyricsButton = article.querySelector("#get-lyrics");
   const lyricsContent = article.querySelector("#lyrics-content");
   const copyLyricsButton = article.querySelector("#copy-lyrics");
@@ -215,7 +236,9 @@ function renderSingle(data) {
     }
 
     try {
-      const response = await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`);
+      const response = await fetch(
+        `https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`,
+      );
       const results = await response.json();
 
       if (results && results.length > 0 && results[0].plainLyrics) {
@@ -240,18 +263,3 @@ function renderSingle(data) {
 
   return article;
 }
-
-/* 1️⃣ Request state when popup opens */
-browserAPI.runtime
-  .sendMessage({ type: "GET_NOW_PLAYING" })
-  .then(render)
-  .catch(() => {
-    // render(null);
-  });
-
-/* 2️⃣ Listen for live updates (optional) */
-browserAPI.runtime.onMessage.addListener((msg) => {
-  if (msg.type === "NOW_PLAYING_UPDATE") {
-    render(msg.payload);
-  }
-});
