@@ -344,6 +344,7 @@ main {
     &:empty {
       margin: 0;
     }
+    margin-bottom: 0;
     font-family: "google sans";
     font-size: 13px;
     line-height: 1.3em;
