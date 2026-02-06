@@ -1,3 +1,5 @@
 - [ ] detect youtube songs
 - [ ] add apple music
 - [ ] add lyrics
+- [ ] save on playlists
+- [ ] like song from popup
