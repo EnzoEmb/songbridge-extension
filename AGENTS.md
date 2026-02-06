@@ -1,7 +1,8 @@
 This is a browser extension.
 Should work in Firefox and Chrome.
-Do not use git commands.
-Dont worry that much about css styling. keep it simple and make it last priority.
+dont use git commands.
+dont use npm commands.
+dont worry about css styling. keep it simple and make it last priority.
 
 The extension has the following functions:
 
@@ -9,7 +10,7 @@ The extension has the following functions:
 - Observes the currently playing song and provides quick access to links.
   It uses the Songlink/Odesli API to fetch cross-platform music links.
 - **Refactor to Support Multiple "Now Playing" Cards**:
-  - **ackground.js**: Modified the storage logic to handle a
+  - **background.js**: Modified the storage logic to handle a
     owPlayingTabs object, allowing the extension to track multiple songs playing in different tabs simultaneously. The script now adds, updates, and removes entries from this object as music starts or stops, and broadcasts the entire collection to the popup.
   - **popup.js**: Reworked the UI rendering to iterate through the
     owPlayingTabs object and display a separate "now playing" card for each song. This includes creating a

@@ -43,6 +43,7 @@ function renderSingle(data) {
           </div>
           <button class="btn-focus" title="Focus on tab"><img src="/assets/img/PixelEyeSolid.svg" alt="Focus on tab"></button>
           <button id="copy-song-link" class="btn-copy" title="Copy song link"><img src="/assets/img/PixelLinkSolid.svg" alt="Copy song link"></button>
+          <button id="get-lyrics" class="btn-lyrics" title="Get Lyrics">Lyrics</button>
           </div>
           <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${
             data.artist
@@ -89,6 +90,10 @@ function renderSingle(data) {
         <a platform="odesli" class="odesli" href="#" title="Go to Odesli">
           <span>Odesli</span> <img src="/assets/img/odesli.svg" alt="Odesli"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="icon-loading" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity=".25"/><path fill="currentColor" d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
         </a>
+      </div>
+      <div class="lyrics-section">
+        <button id="copy-lyrics" class="btn-copy-lyrics" title="Copy Lyrics" style="display:none;">Copy Lyrics</button>
+        <pre id="lyrics-content" class="lyrics-content"></pre>
       </div>
   `;
   // button handlers
@@ -159,6 +164,40 @@ function renderSingle(data) {
   const copyButton = article.querySelector("#copy-song-link");
   copyButton.onclick = () => {
     navigator.clipboard.writeText(url);
+  };
+
+  const getLyricsButton = article.querySelector("#get-lyrics");
+  const lyricsContent = article.querySelector("#lyrics-content");
+  const copyLyricsButton = article.querySelector("#copy-lyrics");
+
+  getLyricsButton.onclick = async () => {
+    getLyricsButton.disabled = true;
+    lyricsContent.textContent = "Loading lyrics...";
+    copyLyricsButton.style.display = "none";
+
+    const title = data.title;
+    const artist = data.artist;
+
+    try {
+      const response = await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`);
+      const results = await response.json();
+
+      if (results && results.length > 0 && results[0].plainLyrics) {
+        lyricsContent.textContent = results[0].plainLyrics;
+        copyLyricsButton.style.display = "block";
+      } else {
+        lyricsContent.textContent = "Lyrics not found.";
+      }
+    } catch (error) {
+      console.error("Error fetching lyrics:", error);
+      lyricsContent.textContent = "Error loading lyrics.";
+    } finally {
+      getLyricsButton.disabled = false;
+    }
+  };
+
+  copyLyricsButton.onclick = () => {
+    navigator.clipboard.writeText(lyricsContent.textContent);
   };
 
   return article;
