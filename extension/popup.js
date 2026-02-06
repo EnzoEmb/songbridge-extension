@@ -95,7 +95,7 @@ function renderSingle(data) {
           </div>
           <button class="btn-focus" title="Focus on tab"><img src="/assets/img/PixelEyeSolid.svg" alt="Focus on tab"></button>
           <button id="copy-song-link" class="btn-copy" title="Copy song link"><img src="/assets/img/PixelLinkSolid.svg" alt="Copy song link"></button>
-          <button id="get-lyrics" class="btn-lyrics" title="Get Lyrics">Lyrics</button>
+          <button id="get-lyrics" class="btn-lyrics" title="Get Lyrics"><img src="/assets/img/PixelarticonsScriptText.svg" alt="Copy song link"></button>
           </div>
           <div class="title" title="${data.title} - ${data.artist}"><div class="marquee">${data.title} - ${
             data.artist
@@ -144,7 +144,7 @@ function renderSingle(data) {
         </a>
       </div>
       <div class="lyrics-section">
-        <button id="copy-lyrics" class="btn-copy-lyrics" title="Copy Lyrics" style="display:none;">Copy Lyrics</button>
+        <button id="copy-lyrics" class="btn-copy-lyrics" title="Copy Lyrics" style="display:none;"><img src="/assets/img/PixelLinkSolid.svg" alt="Copy song link">Copy Lyrics</button>
         <pre id="lyrics-content" class="lyrics-content"></pre>
       </div>
   `;
@@ -233,7 +233,7 @@ function renderSingle(data) {
 
     if (cached) {
       lyricsContent.textContent = cached;
-      copyLyricsButton.style.display = "block";
+      copyLyricsButton.style.display = "flex";
       getLyricsButton.disabled = false;
       return;
     }
@@ -248,7 +248,7 @@ function renderSingle(data) {
 
       if (json?.[0]?.plainLyrics) {
         lyricsContent.textContent = json[0].plainLyrics;
-        copyLyricsButton.style.display = "block";
+        copyLyricsButton.style.display = "flex";
         await storageSet({ [cacheKey]: json[0].plainLyrics });
       } else {
         lyricsContent.textContent = "Lyrics not found.";
