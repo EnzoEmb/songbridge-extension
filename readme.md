@@ -14,9 +14,14 @@ Adds utilities to music streaming web apps, currently Spotify and Youtube Music.
 
 ## Features
 
-- Get a quick Youtube Music / Spotify on each song in the other platform
-- Get quick links to other platforms of the now playing song
-- Quick player controls from the extensions popup
+🎧 **Cross-platform shortcuts**  
+Quickly open the same song on **YouTube Music ↔ Spotify** with one click.
+
+🔗 **Smart music links**  
+Instant access to the song on other streaming platforms while it’s playing.
+
+⏯️ **Popup player controls**  
+Control playback directly from the extension popup — no tab switching needed.
 
 ## API
 

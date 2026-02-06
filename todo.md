@@ -1,0 +1,3 @@
+- [ ] detect youtube songs
+- [ ] add apple music
+- [ ] add lyrics
